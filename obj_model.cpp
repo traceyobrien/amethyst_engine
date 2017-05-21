@@ -10,6 +10,9 @@ void model::readObjFile(){
 
     cout << objfile.c_str();
     in.open( objfile.c_str(), ios::in );
+    if(!in.is_open()){
+        cout << " Cannot open file: " + objfile << endl;
+    }
 
     // Temporary variables for parsing file
     string testtype;
