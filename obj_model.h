@@ -61,7 +61,7 @@ class model{
 
 private:
     // Variables
-    vector<vertex> vertexs;
+    vector<vertex> vertices;
     vector<verTexture> verTextures;
     vector<face> faces;
 public:
