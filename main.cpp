@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     glutKeyboardFunc(key);                                      // Set function to call when keyboard input is detected
     glutIdleFunc(idle);                                         // set function to call when idle
 
-    objects.push_back(model("C:\\Users\\Albert\\Documents\\CodeBlocks_Projects\\Amethyst_engine\\buckyball.obj"));
+    objects.push_back(model("C:\\Program Files \(x86\)\\amethyst_engine\\Resources\\buckyball.obj"));
 
     glutMainLoop();                                             // Main event loop
 
