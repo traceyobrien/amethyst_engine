@@ -62,6 +62,9 @@ void model::objDraw(){
 
     glLoadName(solid);
 
+    if (animation){
+        glRotatef(spin, 0.0, 1.0, 0.0);
+    }
     glColor3f(1.0,1.0,1.0);
     glPolygonMode(GL_FRONT_AND_BACK, polymode);
 

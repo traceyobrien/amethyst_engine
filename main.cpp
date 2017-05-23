@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "obj_model.h"
+#include "Camera.h"
 
 using namespace std;
 
@@ -53,8 +54,11 @@ static void display(void)
 
 
     for(int i=0; i < objects.size(); i++){
+        glTranslatef(i*10, 0.0, 0.0);
         objects[i].objDraw();
+        glTranslatef(-i*10, 0.0, 0.0);
     }
+    //glTranslatef(-objects.size()-1, 0.0, 0.0);
 
     glutSwapBuffers();                                          // when you call glut draw functions they draw not to the screen but to a buffer to display
                                                                 // the the stuff you just drew you need to swap the buffer with the active screen.
@@ -67,6 +71,11 @@ static void key(unsigned char key, int x, int y)
     {
         case 'x':
             cout << "you hit the x key" << endl;
+            break;
+        case 'p':
+            for (int i=0; i < objects.size(); i++){
+                objects[i].animation = !objects[i].animation;
+            }
             break;
         case 'q':
             exit(0);
@@ -93,7 +102,7 @@ int main(int argc, char *argv[])
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);   // Sets screen format
 
     // Create main window
-    glutCreateWindow("Amethyst");                            // Creates the Main Window with Title
+    glutCreateWindow("Amethyst");                               // Creates the Main Window with Title
 
     // Init of logic
     myInit();
@@ -103,6 +112,7 @@ int main(int argc, char *argv[])
     glutKeyboardFunc(key);                                      // Set function to call when keyboard input is detected
     glutIdleFunc(idle);                                         // set function to call when idle
 
+    objects.push_back(model("C:\\Program Files \(x86\)\\amethyst_engine\\Resources\\buckyball.obj"));
     objects.push_back(model("C:\\Program Files \(x86\)\\amethyst_engine\\Resources\\buckyball.obj"));
 
     glutMainLoop();                                             // Main event loop
