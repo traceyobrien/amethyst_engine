@@ -6,10 +6,12 @@
 using namespace std;
 
 void model::readObjFile(){
+    /// Load vertices, vertextures and faces from obj file.
     fstream in;
 
-    cout << objfile.c_str();
-    in.open( objfile.c_str(), ios::in );
+    string filelocation = objpath + objfile;
+    //cout << filelocation.c_str();
+    in.open( filelocation.c_str(), ios::in );
     if(!in.is_open()){
         cout << " Cannot open file: " + objfile << endl;
     }
@@ -68,7 +70,9 @@ void model::objDraw(){
     glLoadName(solid);
 
     glPushMatrix();
-    glRotatef(spin, location.x, location.y, location.z);
+    glRotatef(rotation.x, location.x, location.y, location.z);
+    glRotatef(rotation.y, location.x, location.y, location.z);
+    glRotatef(rotation.z, location.x, location.y, location.z);
 
     glColor3f(1.0,1.0,1.0);
     glPolygonMode(GL_FRONT_AND_BACK, polymode);
@@ -99,3 +103,67 @@ void model::objDraw(){
     glEnd();
     glPopMatrix();
 }
+
+void model::translatef(float x, float y, float z){
+    /// Move object from current position by x, y, z.
+    location.x += x;
+    location.y += y;
+    location.z += z;
+};
+
+void model::rotatef(float x, float y, float z){
+    /// Rotate object from current rotation by x, y, z.
+    rotation.x += x;
+    rotation.y += y;
+    rotation.z += z;
+    if (rotation.x > 360){
+        rotation.x -= 360;
+    }
+    if (rotation.y > 360){
+        rotation.y -= 360;
+    }
+    if (rotation.z > 360){
+        rotation.z -= 360;
+    }
+};
+
+void model::set_location(float x, float y, float z){
+    /// Move object to the given x, y, z coordinates.
+    location.x = x;
+    location.y = y;
+    location.z = z;
+};
+
+void model::reset_rotation(){
+    /// Reset rotation to default.
+    rotation.x = 0;
+    rotation.y = 0;
+    rotation.z = 0;
+};
+
+int model::get_verts(){
+    /// Return the number of vertices in the object.
+    return vertices.size();
+};
+int model::get_faces(){
+    /// Return the number of polygons in the object.
+    return faces.size();
+};
+
+float* model::get_location(){
+    /// Return a array of the object's x,y,z coordinates.
+    float ary [3];
+    ary[0] = location.x;
+    ary[1] = location.y;
+    ary[2] = location.z;
+    return ary;
+};
+
+float* model::get_rotation(){
+    /// Return a array of the object's x,y,z rotation.
+    float ary [3];
+    ary[0] = rotation.x;
+    ary[1] = rotation.y;
+    ary[2] = rotation.z;
+    return ary;
+};

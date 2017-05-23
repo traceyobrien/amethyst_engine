@@ -60,25 +60,39 @@ class model{
     };
 
 private:
-    // Variables
-    vector<vertex> vertices;
-    vector<verTexture> verTextures;
-    vector<face> faces;
+    vector<vertex> vertices;                // Vertexes of the Object.
+    vector<verTexture> verTextures;         // Texture cords of the object.
+    vector<face> faces;                     // Linking information on what vertexes make up which polygons.
+    vertex location;                        // Overall location of object as a whole.
+    vertex rotation;                        // Rotation attributes of object.
+
 public:
-    vertex location;
-    bool animation;
-    int polymode;
-    string objfile;
-    float spin;
-public:
+    bool animation;                         // True for animation on, False for not.
+    int polymode;                           // Tells GLUT how to render the object ex. GL_LINE, GL_FILL being wire frame or solid respectively.
+    string objfile;                         // Name of object file to load from.
+    string objpath;                         // Path in which the Object resources are stored.
+
     // Functions
+public:
     void readObjFile();
     void objDraw();
 
+    void translatef(float x, float y, float z);
+    void rotatef(float x, float y, float z);
+    void set_location(float x, float y, float z);
+    void reset_rotation();
+
+    // Accessors
+    int get_verts();
+    int get_faces();
+    float* get_location();
+    float* get_rotation();
+
+    // Constructor
     model(string filename){
         objfile = filename;
+        objpath = "C:\\Program Files \(x86\)\\amethyst_engine\\Resources\\";
         polymode = GL_LINE;
-        spin = 0.0;
         animation = false;
 
         readObjFile();

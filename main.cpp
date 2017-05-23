@@ -55,11 +55,11 @@ static void display(void)
 
     for(int i=0; i < objects.size(); i++){
         objects[i].objDraw();
-        objects[i].location.x = objects[i].location.x + 10;
+        objects[i].translatef(10.0, 0.0, 0.0);
         objects[i].objDraw();
-        objects[i].location.x = objects[i].location.x + -20;
+        objects[i].translatef(-20.0, 0.0, 0.0);
         objects[i].objDraw();
-        objects[i].location.x = objects[i].location.x + 10;
+        objects[i].translatef(10.0, 0.0, 0.0);
     }
 
     glutSwapBuffers();                                          // when you call glut draw functions they draw not to the screen but to a buffer to display
@@ -74,53 +74,56 @@ static void key(unsigned char key, int x, int y)
         case 'r':
             // Reset all location and rotation information
             for (int i=0; i < objects.size(); i++){
-                objects[i].location.z = 0;
-                objects[i].location.y = 0;
-                objects[i].location.x = 0;
-                objects[i].spin = 0;
+                objects[i].set_location(0.0,0.0,0.0);
+                objects[i].reset_rotation();
             }
             break;
         case 'x':
             // Move all objects 1.0 in z axis
-
             for (int i=0; i < objects.size(); i++){
-                objects[i].location.z = objects[i].location.z + 1.0;
-                cout << objects[i].location.x << objects[i].location.y << objects[i].location.z << endl;
+                objects[i].translatef(0.0,0.0,1.0);
+                float *location = objects[i].get_location();
+                cout << location[0] << location[1] << location[2] << endl;
             }
             break;
         case 'z':
             // Move all objects -1.0 in z axis
             for (int i=0; i < objects.size(); i++){
-                objects[i].location.z = objects[i].location.z + -1.0;
-                cout << objects[i].location.x << objects[i].location.y << objects[i].location.z << endl;
+                objects[i].translatef(0.0,0.0,-1.0);
+                float *location = objects[i].get_location();
+                cout << location[0] << location[1] << location[2] << endl;
             }
             break;
         case 'w':
             // Move all objects 1.0 in y axis
             for (int i=0; i < objects.size(); i++){
-                objects[i].location.y = objects[i].location.y + 1.0;
-                cout << objects[i].location.x << objects[i].location.y << objects[i].location.z << endl;
+                objects[i].translatef(0.0,1.0,0.0);
+                float *location = objects[i].get_location();
+                cout << location[0] << location[1] << location[2] << endl;
             }
             break;
         case 's':
             // Move all objects -1.0 in y axis
             for (int i=0; i < objects.size(); i++){
-                objects[i].location.y = objects[i].location.y + -1.0;
-                cout << objects[i].location.x << objects[i].location.y << objects[i].location.z << endl;
+                objects[i].translatef(0.0,-1.0,0.0);
+                float *location = objects[i].get_location();
+                cout << location[0] << location[1] << location[2] << endl;
             }
             break;
         case 'a':
-            // Move all objects 1.0 in x axis
+            // Move all objects -1.0 in x axis
             for (int i=0; i < objects.size(); i++){
-                objects[i].location.x = objects[i].location.x - 1.0;
-                cout << objects[i].location.x << objects[i].location.y << objects[i].location.z << endl;
+                objects[i].translatef(-1.0,0.0,0.0);
+                float *location = objects[i].get_location();
+                cout << location[0] << location[1] << location[2] << endl;
             }
             break;
         case 'd':
-            // Move all objects -1.0 in x axis
+            // Move all objects 1.0 in x axis
             for (int i=0; i < objects.size(); i++){
-                objects[i].location.x = objects[i].location.x + 1.0;
-                cout << objects[i].location.x << objects[i].location.y << objects[i].location.z << endl;
+                objects[i].translatef(1.0,0.0,0.0);
+                float *location = objects[i].get_location();
+                cout << location[0] << location[1] << location[2] << endl;
             }
             break;
         case 'p':
@@ -143,10 +146,7 @@ static void idle(void)
 {
     for (int i=0; i < objects.size(); i++){
         if (objects[i].animation){
-            objects[i].spin = objects[i].spin + 1.0;
-            if (objects[i].spin > 360){
-                objects[i].spin = objects[i].spin - 360;
-            }
+            objects[i].rotatef(0.0, 1.0, 0.0);
         }
     }
     glutPostRedisplay();                                        // Tells display to redraw/update display
@@ -173,7 +173,14 @@ int main(int argc, char *argv[])
     glutKeyboardFunc(key);                                      // Set function to call when keyboard input is detected
     glutIdleFunc(idle);                                         // set function to call when idle
 
-    objects.push_back(model("C:\\Program Files \(x86\)\\amethyst_engine\\Resources\\buckyball.obj"));
+    objects.push_back(model("buckyball.obj"));
+
+    int polycount = 0;
+    for (int i=0; i < objects.size(); i++){
+        polycount += objects[i].get_faces();
+    }
+
+    cout << "Total number of polys being Rendered: "<< polycount*3 << endl;
 
     glutMainLoop();                                             // Main event loop
 
