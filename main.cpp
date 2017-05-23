@@ -52,7 +52,7 @@ static void display(void)
     // Clear the buffer before drawing
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-
+    // Draw all objects
     for(int i=0; i < objects.size(); i++){
         objects[i].objDraw();
         objects[i].translatef(10.0, 0.0, 0.0);
@@ -62,9 +62,24 @@ static void display(void)
         objects[i].translatef(10.0, 0.0, 0.0);
     }
 
+    // Draw all text
+    glColor3f(0.0,1.0,0.0);
+    glRasterPos2f(-5,-5);
+    char test[] = "hello";
+    char *c;
+
+    for(c=test; *c!='\0'; c++){
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
+    }
+
     glutSwapBuffers();                                          // when you call glut draw functions they draw not to the screen but to a buffer to display
                                                                 // the the stuff you just drew you need to swap the buffer with the active screen.
 }
+
+// Initializes the keyboard bindings.
+void keyboardInit(){
+
+};
 
 // Function to be called when keyboard input is detected.
 static void key(unsigned char key, int x, int y)
@@ -167,6 +182,7 @@ int main(int argc, char *argv[])
 
     // Init of logic
     myInit();
+    keyboardInit();
 
     // Set function calls
     glutDisplayFunc(display);                                   // Set the main draw function

@@ -66,41 +66,48 @@ void model::readObjFile(){
 }
 
 void model::objDraw(){
-
+    /// Function to add object to the overall scene.
+    // Set unique name so that it can be selected.
     glLoadName(solid);
 
+    // Beginning of object
     glPushMatrix();
-    glRotatef(rotation.x, location.x, location.y, location.z);
-    glRotatef(rotation.y, location.x, location.y, location.z);
-    glRotatef(rotation.z, location.x, location.y, location.z);
+        // Rotation offset from default.
+        glRotatef(rotation.x, location.x, location.y, location.z);
+        glRotatef(rotation.y, location.x, location.y, location.z);
+        glRotatef(rotation.z, location.x, location.y, location.z);
 
-    glColor3f(1.0,1.0,1.0);
-    glPolygonMode(GL_FRONT_AND_BACK, polymode);
+        // Set color of object
+        glColor3f(1.0,1.0,1.0);
+        // Set draw mode of object (wire-frame, solid, points)
+        glPolygonMode(GL_FRONT_AND_BACK, polymode);
 
-    glBegin(GL_TRIANGLES);
-    for (int i=0; i< faces.size();i++){
-        // Computation of normal for the triangle
-        float qx = vertices[faces[i].yv].x - vertices[faces[i].xv].x;
-        float qy = vertices[faces[i].yv].y - vertices[faces[i].xv].y;
-        float qz = vertices[faces[i].yv].z - vertices[faces[i].xv].z;
-        float px = vertices[faces[i].zv].x - vertices[faces[i].xv].x;
-        float py = vertices[faces[i].zv].y - vertices[faces[i].xv].y;
-        float pz = vertices[faces[i].zv].z - vertices[faces[i].xv].z;
-        float xnorm = -( py*qz - pz*qy );
-        float ynorm = -( pz*qx - px*qz );
-        float znorm = -( px*qy - py*qx );
+        // Add polygons
+        glBegin(GL_TRIANGLES);
+        for (int i=0; i< faces.size();i++){
+            // Computation of normal for the triangle
+            float qx = vertices[faces[i].yv].x - vertices[faces[i].xv].x;
+            float qy = vertices[faces[i].yv].y - vertices[faces[i].xv].y;
+            float qz = vertices[faces[i].yv].z - vertices[faces[i].xv].z;
+            float px = vertices[faces[i].zv].x - vertices[faces[i].xv].x;
+            float py = vertices[faces[i].zv].y - vertices[faces[i].xv].y;
+            float pz = vertices[faces[i].zv].z - vertices[faces[i].xv].z;
+            float xnorm = -( py*qz - pz*qy );
+            float ynorm = -( pz*qx - px*qz );
+            float znorm = -( px*qy - py*qx );
 
-        float len = 1.0/sqrt( xnorm*xnorm + ynorm*ynorm + znorm*znorm);
-        xnorm *= len;
-        ynorm *= len;
-        znorm *= len;
+            float len = 1.0/sqrt( xnorm*xnorm + ynorm*ynorm + znorm*znorm);
+            xnorm *= len;
+            ynorm *= len;
+            znorm *= len;
 
-        glNormal3f(xnorm, ynorm, znorm);
-        glVertex3f(location.x + vertices[faces[i].xv].x, location.y + vertices[faces[i].xv].y, location.z + vertices[faces[i].xv].z);
-        glVertex3f(location.x + vertices[faces[i].yv].x, location.y + vertices[faces[i].yv].y, location.z + vertices[faces[i].yv].z);
-        glVertex3f(location.x + vertices[faces[i].zv].x, location.y + vertices[faces[i].zv].y, location.z + vertices[faces[i].zv].z);
-    }
-    glEnd();
+            // Draw vertices of Triangle and normal.
+            glNormal3f(xnorm, ynorm, znorm);
+            glVertex3f(location.x + vertices[faces[i].xv].x, location.y + vertices[faces[i].xv].y, location.z + vertices[faces[i].xv].z);
+            glVertex3f(location.x + vertices[faces[i].yv].x, location.y + vertices[faces[i].yv].y, location.z + vertices[faces[i].yv].z);
+            glVertex3f(location.x + vertices[faces[i].zv].x, location.y + vertices[faces[i].zv].y, location.z + vertices[faces[i].zv].z);
+        }
+        glEnd();
     glPopMatrix();
 }
 
