@@ -54,6 +54,11 @@ void model::readObjFile(){
         }
     }
 
+    // set center of object
+    location.x = 0;
+    location.y = 0;
+    location.z = 0;
+
     // Close the file
     in.close();
 }
@@ -62,9 +67,9 @@ void model::objDraw(){
 
     glLoadName(solid);
 
-    if (animation){
-        glRotatef(spin, 0.0, 1.0, 0.0);
-    }
+    glPushMatrix();
+    glRotatef(spin, location.x, location.y, location.z);
+
     glColor3f(1.0,1.0,1.0);
     glPolygonMode(GL_FRONT_AND_BACK, polymode);
 
@@ -87,9 +92,10 @@ void model::objDraw(){
         znorm *= len;
 
         glNormal3f(xnorm, ynorm, znorm);
-        glVertex3f(vertices[faces[i].xv].x, vertices[faces[i].xv].y, vertices[faces[i].xv].z);
-        glVertex3f(vertices[faces[i].yv].x, vertices[faces[i].yv].y, vertices[faces[i].yv].z);
-        glVertex3f(vertices[faces[i].zv].x, vertices[faces[i].zv].y, vertices[faces[i].zv].z);
+        glVertex3f(location.x + vertices[faces[i].xv].x, location.y + vertices[faces[i].xv].y, location.z + vertices[faces[i].xv].z);
+        glVertex3f(location.x + vertices[faces[i].yv].x, location.y + vertices[faces[i].yv].y, location.z + vertices[faces[i].yv].z);
+        glVertex3f(location.x + vertices[faces[i].zv].x, location.y + vertices[faces[i].zv].y, location.z + vertices[faces[i].zv].z);
     }
     glEnd();
+    glPopMatrix();
 }

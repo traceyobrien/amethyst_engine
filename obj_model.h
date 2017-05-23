@@ -65,6 +65,7 @@ private:
     vector<verTexture> verTextures;
     vector<face> faces;
 public:
+    vertex location;
     bool animation;
     int polymode;
     string objfile;
@@ -77,7 +78,7 @@ public:
     model(string filename){
         objfile = filename;
         polymode = GL_LINE;
-        spin = 1.0;
+        spin = 0.0;
         animation = false;
 
         readObjFile();

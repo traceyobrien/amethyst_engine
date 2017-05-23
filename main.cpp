@@ -54,11 +54,13 @@ static void display(void)
 
 
     for(int i=0; i < objects.size(); i++){
-        glTranslatef(i*10, 0.0, 0.0);
         objects[i].objDraw();
-        glTranslatef(-i*10, 0.0, 0.0);
+        objects[i].location.x = objects[i].location.x + 10;
+        objects[i].objDraw();
+        objects[i].location.x = objects[i].location.x + -20;
+        objects[i].objDraw();
+        objects[i].location.x = objects[i].location.x + 10;
     }
-    //glTranslatef(-objects.size()-1, 0.0, 0.0);
 
     glutSwapBuffers();                                          // when you call glut draw functions they draw not to the screen but to a buffer to display
                                                                 // the the stuff you just drew you need to swap the buffer with the active screen.
@@ -69,15 +71,66 @@ static void key(unsigned char key, int x, int y)
 {
     switch (key)                                                // key is the input from the keyboard
     {
+        case 'r':
+            // Reset all location and rotation information
+            for (int i=0; i < objects.size(); i++){
+                objects[i].location.z = 0;
+                objects[i].location.y = 0;
+                objects[i].location.x = 0;
+                objects[i].spin = 0;
+            }
+            break;
         case 'x':
-            cout << "you hit the x key" << endl;
+            // Move all objects 1.0 in z axis
+
+            for (int i=0; i < objects.size(); i++){
+                objects[i].location.z = objects[i].location.z + 1.0;
+                cout << objects[i].location.x << objects[i].location.y << objects[i].location.z << endl;
+            }
+            break;
+        case 'z':
+            // Move all objects -1.0 in z axis
+            for (int i=0; i < objects.size(); i++){
+                objects[i].location.z = objects[i].location.z + -1.0;
+                cout << objects[i].location.x << objects[i].location.y << objects[i].location.z << endl;
+            }
+            break;
+        case 'w':
+            // Move all objects 1.0 in y axis
+            for (int i=0; i < objects.size(); i++){
+                objects[i].location.y = objects[i].location.y + 1.0;
+                cout << objects[i].location.x << objects[i].location.y << objects[i].location.z << endl;
+            }
+            break;
+        case 's':
+            // Move all objects -1.0 in y axis
+            for (int i=0; i < objects.size(); i++){
+                objects[i].location.y = objects[i].location.y + -1.0;
+                cout << objects[i].location.x << objects[i].location.y << objects[i].location.z << endl;
+            }
+            break;
+        case 'a':
+            // Move all objects 1.0 in x axis
+            for (int i=0; i < objects.size(); i++){
+                objects[i].location.x = objects[i].location.x - 1.0;
+                cout << objects[i].location.x << objects[i].location.y << objects[i].location.z << endl;
+            }
+            break;
+        case 'd':
+            // Move all objects -1.0 in x axis
+            for (int i=0; i < objects.size(); i++){
+                objects[i].location.x = objects[i].location.x + 1.0;
+                cout << objects[i].location.x << objects[i].location.y << objects[i].location.z << endl;
+            }
             break;
         case 'p':
+            // Start Rotation animation.
             for (int i=0; i < objects.size(); i++){
                 objects[i].animation = !objects[i].animation;
             }
             break;
         case 'q':
+            // Quit program
             exit(0);
             break;
     }
@@ -88,6 +141,14 @@ static void key(unsigned char key, int x, int y)
 // Function to be called when idle
 static void idle(void)
 {
+    for (int i=0; i < objects.size(); i++){
+        if (objects[i].animation){
+            objects[i].spin = objects[i].spin + 1.0;
+            if (objects[i].spin > 360){
+                objects[i].spin = objects[i].spin - 360;
+            }
+        }
+    }
     glutPostRedisplay();                                        // Tells display to redraw/update display
 }
 
@@ -112,7 +173,6 @@ int main(int argc, char *argv[])
     glutKeyboardFunc(key);                                      // Set function to call when keyboard input is detected
     glutIdleFunc(idle);                                         // set function to call when idle
 
-    objects.push_back(model("C:\\Program Files \(x86\)\\amethyst_engine\\Resources\\buckyball.obj"));
     objects.push_back(model("C:\\Program Files \(x86\)\\amethyst_engine\\Resources\\buckyball.obj"));
 
     glutMainLoop();                                             // Main event loop
