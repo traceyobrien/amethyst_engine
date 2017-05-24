@@ -25,7 +25,6 @@
 #include <vector>
 
 #include "obj_model.h"
-#include "Camera.h"
 
 using namespace std;
 
@@ -62,111 +61,9 @@ static void display(void)
         objects[i].translatef(10.0, 0.0, 0.0);
     }
 
-    // Draw all text
-    glColor3f(0.0,1.0,0.0);
-    glRasterPos2f(-5,-5);
-    char test[] = "hello";
-    char *c;
-
-    for(c=test; *c!='\0'; c++){
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
-    }
-
     glutSwapBuffers();                                          // when you call glut draw functions they draw not to the screen but to a buffer to display
                                                                 // the the stuff you just drew you need to swap the buffer with the active screen.
 }
-
-// Initializes the keyboard bindings.
-void keyboardInit(){
-
-};
-
-// Function to be called when keyboard input is detected.
-static void key(unsigned char key, int x, int y)
-{
-    switch (key)                                                // key is the input from the keyboard
-    {
-        case 'r':
-            // Reset all location and rotation information
-            for (int i=0; i < objects.size(); i++){
-                objects[i].set_location(0.0,0.0,0.0);
-                objects[i].reset_rotation();
-            }
-            break;
-        case 'x':
-            // Move all objects 1.0 in z axis
-            for (int i=0; i < objects.size(); i++){
-                objects[i].translatef(0.0,0.0,1.0);
-                float *location = objects[i].get_location();
-                cout << location[0] << location[1] << location[2] << endl;
-            }
-            break;
-        case 'z':
-            // Move all objects -1.0 in z axis
-            for (int i=0; i < objects.size(); i++){
-                objects[i].translatef(0.0,0.0,-1.0);
-                float *location = objects[i].get_location();
-                cout << location[0] << location[1] << location[2] << endl;
-            }
-            break;
-        case 'w':
-            // Move all objects 1.0 in y axis
-            for (int i=0; i < objects.size(); i++){
-                objects[i].translatef(0.0,1.0,0.0);
-                float *location = objects[i].get_location();
-                cout << location[0] << location[1] << location[2] << endl;
-            }
-            break;
-        case 's':
-            // Move all objects -1.0 in y axis
-            for (int i=0; i < objects.size(); i++){
-                objects[i].translatef(0.0,-1.0,0.0);
-                float *location = objects[i].get_location();
-                cout << location[0] << location[1] << location[2] << endl;
-            }
-            break;
-        case 'a':
-            // Move all objects -1.0 in x axis
-            for (int i=0; i < objects.size(); i++){
-                objects[i].translatef(-1.0,0.0,0.0);
-                float *location = objects[i].get_location();
-                cout << location[0] << location[1] << location[2] << endl;
-            }
-            break;
-        case 'd':
-            // Move all objects 1.0 in x axis
-            for (int i=0; i < objects.size(); i++){
-                objects[i].translatef(1.0,0.0,0.0);
-                float *location = objects[i].get_location();
-                cout << location[0] << location[1] << location[2] << endl;
-            }
-            break;
-        case 'p':
-            // Start Rotation animation.
-            for (int i=0; i < objects.size(); i++){
-                objects[i].animation = !objects[i].animation;
-            }
-            break;
-        case 'q':
-            // Quit program
-            exit(0);
-            break;
-    }
-
-    glutPostRedisplay();                                        // Tells display to redraw/update display
-}
-
-// Function to be called when idle
-static void idle(void)
-{
-    for (int i=0; i < objects.size(); i++){
-        if (objects[i].animation){
-            objects[i].rotatef(0.0, 1.0, 0.0);
-        }
-    }
-    glutPostRedisplay();                                        // Tells display to redraw/update display
-}
-
 
 /* Program entry point */
 int main(int argc, char *argv[])
@@ -182,11 +79,11 @@ int main(int argc, char *argv[])
 
     // Init of logic
     myInit();
-    keyboardInit();
+    keyboard();
 
     // Set function calls
     glutDisplayFunc(display);                                   // Set the main draw function
-    glutKeyboardFunc(key);                                      // Set function to call when keyboard input is detected
+    glutKeyboardFunc(keyInput);                                      // Set function to call when keyboard input is detected
     glutIdleFunc(idle);                                         // set function to call when idle
 
     objects.push_back(model("buckyball.obj"));
