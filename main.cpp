@@ -25,11 +25,13 @@
 #include <vector>
 
 #include "obj_model.h"
+#include "fpsTimer.h"
 
 using namespace std;
 
 // Global Variables
 vector<model> objects;
+FpsTimer fpsTimer = FpsTimer(8);
 
 void myInit(){
     // Background color
@@ -45,32 +47,49 @@ void myInit(){
     glEnable( GL_DEPTH_TEST );
 }
 
+void drawText(float x, float y, void *font, char *string) {
+	char *c;
+	glRasterPos2f(x,y);
+	
+	for(c=string; *c != '\0'; c++) {
+		glutBitmapCharacter(font, *c);
+	}
+}
+
 // Function to be called when a display update is requested all of the drawing will happen in this function and any functions it calls.
 static void display(void)
 {
+	fpsTimer.timeFrame();
     // Clear the buffer before drawing
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Draw all objects
     for(int i=0; i < objects.size(); i++){
+		glPushMatrix() ; // save
         objects[i].objDraw();
+		glPopMatrix();
         objects[i].translatef(10.0, 0.0, 0.0);
+		glPushMatrix() ; // save
         objects[i].objDraw();
+		glPopMatrix();
         objects[i].translatef(-20.0, 0.0, 0.0);
+		glPushMatrix() ; // save
         objects[i].objDraw();
+		glPopMatrix();
         objects[i].translatef(10.0, 0.0, 0.0);
     }
-
+	//glPushMatrix();
+	//glLoadIdentity();
+	glDisable( GL_DEPTH_TEST ) ; // Disable Depth so that text renders on top
+	//glDisable( GL_LIGHTING ); // Disable Lighting so text is correct color
+	
     // Draw all text
-    glColor3f(0.0,1.0,0.0);
-    glRasterPos2f(-5,-5);
-    char test[] = "hello";
-    char *c;
-
-    for(c=test; *c!='\0'; c++){
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
-    }
-
+    glColor3f(0.2,0.75,0.2);
+	drawText(-8.1f, 5.9f, GLUT_BITMAP_HELVETICA_10, fpsTimer.getFps());
+	
+	glEnable( GL_DEPTH_TEST ) ; // Renable Depth
+	//glPopMatrix();
+	
     glutSwapBuffers();                                          // when you call glut draw functions they draw not to the screen but to a buffer to display
                                                                 // the the stuff you just drew you need to swap the buffer with the active screen.
 }
@@ -188,7 +207,7 @@ int main(int argc, char *argv[])
     glutKeyboardFunc(key);                                      // Set function to call when keyboard input is detected
     glutIdleFunc(idle);                                         // set function to call when idle
 
-    objects.push_back(model("buckyball.obj"));
+    objects.push_back(model("cow.obj"));
 
     int polycount = 0;
     for (int i=0; i < objects.size(); i++){
