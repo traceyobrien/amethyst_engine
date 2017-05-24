@@ -25,7 +25,6 @@
 #include <vector>
 
 #include "obj_model.h"
-#include "Camera.h"
 
 using namespace std;
 
