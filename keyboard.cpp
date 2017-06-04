@@ -1,8 +1,15 @@
 #include "keyboard.h"
+#include <iostream>
 
-
-// Function to be called when keyboard input is detected.
-static void keyInput(unsigned char key, int x, int y)
+func keyboard_handler::keyInput(unsigned char key, int x, int y){
+    for (std::map<string, char>::iterator iter=keybindings.begin(); iter!=keybindings.end(); ++iter){
+        if (iter->second == key){
+            return keyfuncs[iter->first];
+        }
+    }
+};
+/*
+void keyboard_handler::keyInput(unsigned char key, int x, int y)
 {
     if(key == keybindings.at("resetKey")){
         // Reset all location and rotation information
@@ -73,16 +80,20 @@ static void keyInput(unsigned char key, int x, int y)
 
     glutPostRedisplay();                                        // Tells display to redraw/update display
 }
-
-void addKey(string keyName, char key, func kFunc){
+*/
+void keyboard_handler::addKey(string keyName, char key, func kFunc){
     /// Add a key to the keybindings.
-    keyFunc = kFunc;        // store
+    keybindings[keyName] = key;
+    keyfuncs[keyName] = kFunc;
 }
 
-void removeKey(string keyName){
+void keyboard_handler::removeKey(string keyName){
     /// Remove key from keybindings.
+    keybindings.erase(keyName);
+    keyfuncs.erase(keyName);
 };
 
-void updateKey(string keyName, char key){
+void keyboard_handler::updateKey(string keyName, char key){
     /// Change the key associated with a binding.
+    keybindings[keyName] = key;
 };
