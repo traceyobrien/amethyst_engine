@@ -1,15 +1,7 @@
-/*
- * GLUT Shapes Demo
+/* Main.cpp
+ * Amethyst Engine
  *
- * Written by Nigel Stewart November 2003
- *
- * This program is test harness for the sphere, cone
- * and torus shapes in GLUT.
- *
- * Spinning wireframe and smooth shaded shapes are
- * displayed until the ESC or q key is pressed.  The
- * number of geometry stacks and slices can be adjusted
- * using the + and - keys.
+ * Written by Albert Bode June 2017
  */
 
 // Cross platform include statement for glut library
@@ -18,15 +10,15 @@
 #else
 #include <GL/glut.h>
 #endif
-
-// Other include statements
+// External library include statements
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
-
+// Internal header includes
 #include "obj_model.h"
 #include "fpsTimer.h"
 #include "keyboard.h"
+#include "engine_keys.h"
 
 using namespace std;
 
@@ -60,7 +52,8 @@ void drawText(float x, float y, void *font, char *string) {
 
 // Function to be called when keyboard input is detected.
 static void key(unsigned char key, int x, int y){
-    func return_func = k.keyInput(key, x, y);
+	void (*return_func)();
+    return_func = k.keyInput(key, x, y);
     return_func();
 };
 
@@ -105,7 +98,7 @@ static void display(void)
                                                                 // the the stuff you just drew you need to swap the buffer with the active screen.
 }
 
-static  void idle(void){
+static void idle(void){
     glutPostRedisplay();
 }
 
@@ -123,6 +116,7 @@ int main(int argc, char *argv[])
 
     // Init of logic
     myInit();
+	init_engine_keys();
 
     // Set function calls
     glutDisplayFunc(display);                                   // Set the main draw function

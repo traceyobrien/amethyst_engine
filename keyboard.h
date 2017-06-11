@@ -2,16 +2,16 @@
 #define KEYBOARD_H_INCLUDED
 
 #include "string"
-#include "obj_model.h"
 #include <map>
+#include <iostream>
 
 using namespace std;
 
 typedef void (*func)(void);
 
-class keyboard_handler {
+class keyboard_handler{
 
-    std::map<string, char> keybindings;
+    std::map<char, string> keybindings;
     std::map<string, func> keyfuncs;
 
 public:
@@ -19,22 +19,12 @@ public:
     void addKey(string keyName, char key, func kFunc);
     void removeKey(string keyName);
     void updateKey(string keyName, char key);
+	void clear();
 
 public:
     keyboard_handler(){                                         // Initializes the keyboard bindings.
-        keybindings.insert(std::make_pair("resetKey", 'r'));
-        keybindings.insert(std::make_pair("moveForward", 'x'));
-        keybindings.insert(std::make_pair("moveBackward", 'z'));
-        keybindings.insert(std::make_pair("moveUp", 'w'));
-        keybindings.insert(std::make_pair("moveDown", 's'));
-        keybindings.insert(std::make_pair("moveLeft", 'a'));
-        keybindings.insert(std::make_pair("moveRight", 'd'));
-        keybindings.insert(std::make_pair("play", 'p'));
-        keybindings.insert(std::make_pair("quit", 'q'));
-    };
 
+	};
 };
 
-extern vector<model> objects;
-extern keyboard_handler k;
 #endif // KEYBOARD_H_INCLUDED
