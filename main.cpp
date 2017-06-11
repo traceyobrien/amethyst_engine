@@ -1,15 +1,7 @@
-/*
- * GLUT Shapes Demo
+/* Main.cpp
+ * Amethyst Engine
  *
- * Written by Nigel Stewart November 2003
- *
- * This program is test harness for the sphere, cone
- * and torus shapes in GLUT.
- *
- * Spinning wireframe and smooth shaded shapes are
- * displayed until the ESC or q key is pressed.  The
- * number of geometry stacks and slices can be adjusted
- * using the + and - keys.
+ * Written by Albert Bode June 2017
  */
 
 // Cross platform include statement for glut library
@@ -18,18 +10,20 @@
 #else
 #include <GL/glut.h>
 #endif
-
-// Other include statements
+// External library include statements
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
-
+// Internal header includes
 #include "obj_model.h"
 #include "fpsTimer.h"
+#include "keyboard.h"
+#include "engine_keys.h"
 
 using namespace std;
 
 // Global Variables
+keyboard_handler k = keyboard_handler();
 vector<model> objects;
 FpsTimer fpsTimer = FpsTimer(8);
 
@@ -56,6 +50,13 @@ void drawText(float x, float y, void *font, char *string) {
 	}
 }
 
+// Function to be called when keyboard input is detected.
+static void key(unsigned char key, int x, int y){
+	void (*return_func)();
+    return_func = k.keyInput(key, x, y);
+    return_func();
+};
+
 // Function to be called when a display update is requested all of the drawing will happen in this function and any functions it calls.
 static void display(void)
 {
@@ -65,6 +66,7 @@ static void display(void)
 
     // Draw all objects
     for(int i=0; i < objects.size(); i++){
+        objects[i].translatef(0.0, 0.0, i*-10.0);
 		glPushMatrix() ; // save
         objects[i].objDraw();
 		glPopMatrix();
@@ -77,7 +79,9 @@ static void display(void)
         objects[i].objDraw();
 		glPopMatrix();
         objects[i].translatef(10.0, 0.0, 0.0);
+        objects[i].translatef(0.0, 0.0, i*10.0);
     }
+
 	//glPushMatrix();
 	//glLoadIdentity();
 	glDisable( GL_DEPTH_TEST ) ; // Disable Depth so that text renders on top
@@ -94,97 +98,9 @@ static void display(void)
                                                                 // the the stuff you just drew you need to swap the buffer with the active screen.
 }
 
-// Initializes the keyboard bindings.
-void keyboardInit(){
-
-};
-
-// Function to be called when keyboard input is detected.
-static void key(unsigned char key, int x, int y)
-{
-    switch (key)                                                // key is the input from the keyboard
-    {
-        case 'r':
-            // Reset all location and rotation information
-            for (int i=0; i < objects.size(); i++){
-                objects[i].set_location(0.0,0.0,0.0);
-                objects[i].reset_rotation();
-            }
-            break;
-        case 'x':
-            // Move all objects 1.0 in z axis
-            for (int i=0; i < objects.size(); i++){
-                objects[i].translatef(0.0,0.0,1.0);
-                float *location = objects[i].get_location();
-                cout << location[0] << location[1] << location[2] << endl;
-            }
-            break;
-        case 'z':
-            // Move all objects -1.0 in z axis
-            for (int i=0; i < objects.size(); i++){
-                objects[i].translatef(0.0,0.0,-1.0);
-                float *location = objects[i].get_location();
-                cout << location[0] << location[1] << location[2] << endl;
-            }
-            break;
-        case 'w':
-            // Move all objects 1.0 in y axis
-            for (int i=0; i < objects.size(); i++){
-                objects[i].translatef(0.0,1.0,0.0);
-                float *location = objects[i].get_location();
-                cout << location[0] << location[1] << location[2] << endl;
-            }
-            break;
-        case 's':
-            // Move all objects -1.0 in y axis
-            for (int i=0; i < objects.size(); i++){
-                objects[i].translatef(0.0,-1.0,0.0);
-                float *location = objects[i].get_location();
-                cout << location[0] << location[1] << location[2] << endl;
-            }
-            break;
-        case 'a':
-            // Move all objects -1.0 in x axis
-            for (int i=0; i < objects.size(); i++){
-                objects[i].translatef(-1.0,0.0,0.0);
-                float *location = objects[i].get_location();
-                cout << location[0] << location[1] << location[2] << endl;
-            }
-            break;
-        case 'd':
-            // Move all objects 1.0 in x axis
-            for (int i=0; i < objects.size(); i++){
-                objects[i].translatef(1.0,0.0,0.0);
-                float *location = objects[i].get_location();
-                cout << location[0] << location[1] << location[2] << endl;
-            }
-            break;
-        case 'p':
-            // Start Rotation animation.
-            for (int i=0; i < objects.size(); i++){
-                objects[i].animation = !objects[i].animation;
-            }
-            break;
-        case 'q':
-            // Quit program
-            exit(0);
-            break;
-    }
-
-    glutPostRedisplay();                                        // Tells display to redraw/update display
+static void idle(void){
+    glutPostRedisplay();
 }
-
-// Function to be called when idle
-static void idle(void)
-{
-    for (int i=0; i < objects.size(); i++){
-        if (objects[i].animation){
-            objects[i].rotatef(0.0, 1.0, 0.0);
-        }
-    }
-    glutPostRedisplay();                                        // Tells display to redraw/update display
-}
-
 
 /* Program entry point */
 int main(int argc, char *argv[])
@@ -200,14 +116,15 @@ int main(int argc, char *argv[])
 
     // Init of logic
     myInit();
-    keyboardInit();
+	init_engine_keys();
 
     // Set function calls
     glutDisplayFunc(display);                                   // Set the main draw function
     glutKeyboardFunc(key);                                      // Set function to call when keyboard input is detected
     glutIdleFunc(idle);                                         // set function to call when idle
 
-    objects.push_back(model("killeroo.obj"));
+    objects.push_back(model("buckyball.obj"));
+    //objects.push_back(model("killeroo.obj"));
 
     int polycount = 0;
     for (int i=0; i < objects.size(); i++){

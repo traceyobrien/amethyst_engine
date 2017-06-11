@@ -10,7 +10,6 @@ void model::readObjFile(){
     fstream in;
 
     string filelocation = objpath + objfile;
-    //cout << filelocation.c_str();
     in.open( filelocation.c_str(), ios::in );
     if(!in.is_open()){
         cout << " Cannot open file: " + objfile << endl;
