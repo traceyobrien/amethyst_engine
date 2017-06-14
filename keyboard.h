@@ -1,3 +1,11 @@
+//
+//  Keyboard.h
+//  amethyst_engine
+//
+//  Created by Tracey O'Brien on 6/11/17.
+//  Copyright © 2017 Tracey O'Brien. All rights reserved.
+//
+
 #ifndef KEYBOARD_H_INCLUDED
 #define KEYBOARD_H_INCLUDED
 

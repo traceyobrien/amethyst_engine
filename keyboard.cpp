@@ -1,3 +1,11 @@
+//
+//  Keyboard.cpp
+//  amethyst_engine
+//
+//  Created by Tracey O'Brien on 6/11/17.
+//  Copyright © 2017 Tracey O'Brien. All rights reserved.
+//
+
 #include "keyboard.h"
 #include <iostream>
 
@@ -12,7 +20,7 @@ func keyboard_handler::keyInput(unsigned char key, int x, int y){
 	}
 	else{
 		//cout << "Corresponds to "  << keyname << endl;
-		return keyfuncs[keyname];		
+		return keyfuncs[keyname];
 	};
 };
 
@@ -41,4 +49,5 @@ void keyboard_handler::updateKey(string keyName, char key){
 
 void keyboard_handler::clear(){
 	/// Erase all keybindings.
+
 };

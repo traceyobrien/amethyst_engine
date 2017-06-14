@@ -1,3 +1,11 @@
+//
+//  obj_model.cpp
+//  amethyst_engine
+//
+//  Created by Albert Bode on 5/21/17.
+//  Copyright © 2017 Albert Bode. All rights reserved.
+//
+
 #include "obj_model.h"
 #include <iostream>
 #include <fstream>

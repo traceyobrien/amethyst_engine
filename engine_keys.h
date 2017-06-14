@@ -30,7 +30,7 @@ void forward_function(){
 	// Move all objects 1.0 in z-axis
 	for (int i=0; i < objects.size(); i++){
 		objects[i].translatef(0.0,0.0,1.0);
-		cout << "i got to this point" << endl;
+		//cout << "i got to this point" << endl;
 		//float *location = objects[i].get_location();
 		//cout << location[0] << location[1] << location[2] << endl;
 	}
@@ -102,7 +102,6 @@ void init_engine_keys(){
 	k.addKey("play", 'p', animation_function);
 	k.addKey("quit", 'q', quit_function);
 }
-
 
 
 #endif /* engine_keys_h */

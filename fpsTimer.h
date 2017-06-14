@@ -1,5 +1,5 @@
 //
-//  FpsTimer.hpp
+//  FpsTimer.h
 //  amethyst_engine
 //
 //  Created by Albert Bode on 5/24/17.

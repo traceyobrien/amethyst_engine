@@ -1,9 +1,10 @@
-/*
-* obj_model.h
-* Amethyst_engine
-*
-* Created by Albert Bode on 5/21/2017
-*/
+//
+//  FpsTimer.h
+//  amethyst_engine
+//
+//  Created by Albert Bode on 5/21/17.
+//  Copyright © 2017 Albert Bode. All rights reserved.
+//
 
 #ifndef OBJ_MODEL_H_INCLUDED
 #define OBJ_MODEL_H_INCLUDED
