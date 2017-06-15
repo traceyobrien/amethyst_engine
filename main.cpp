@@ -52,6 +52,8 @@ void myInit(){
     glLoadIdentity();
     glTranslatef(0,0,-15);
     glEnable( GL_DEPTH_TEST );
+    glEnable( GL_LIGHTING );
+    glEnable( GL_LIGHT0 );
 }
 
 // Function to be called when keyboard input is detected.
@@ -66,56 +68,15 @@ static void special_key(int key, int x, int y){
 };
 
 static void mouse( int button, int state, int x, int y ){
+    // This could be changed to just call glut_mouse directly.
+    // The reason it isn't currently is you have to get a function pointer and im too lazy to fix it.
     m.glut_mouse(button,state,x,y);
-    /*
-    switch(button){
-    case GLUT_LEFT_BUTTON:
-        if(state == GLUT_DOWN){
-            cout << "you pressed the left button" << endl;
-            referencex = float(x - winWidth/2) / winWidth ;
-            referencey = float(-y + winHeight/2) / winHeight;
-            mousex = float(x - winWidth/2) / winWidth;
-            mousey = float(-y + winHeight/2) / winHeight;
-            drawRect = true;
-        }
-        if(state == GLUT_UP){
-            cout << "you released the left button" << endl;
-            drawRect = false;
-        }
-        break;
-    case GLUT_RIGHT_BUTTON:
-        if(state == GLUT_DOWN){
-            cout << "you pressed the right button" << endl;
-            mousez += 1;
-        }
-        if(state == GLUT_UP){
-            cout << "you released the right button" << endl;
-        }
-        break;
-    case GLUT_MIDDLE_BUTTON:
-        if(state == GLUT_DOWN){
-            cout << "you pressed the middle button" << endl;
-            mousez += -1;
-        }
-        if(state == GLUT_UP){
-            cout << "you released the middle button" << endl;
-        }
-        break;
-    }
-    */
 };
 
 static void motion(int x, int y){
+    // This could be changed to just call glut_motion directly.
+    // The reason it isn't currently is you have to get a function pointer and im too lazy to fix it.
     m.glut_motion(x,y);
-    /*
-    mousex = float(x - winWidth/2) / winWidth;
-    mousey = float(-y + winHeight/2) / winHeight;
-
-    //Print the mouse drag position
-    printf("Internal cord: %f, %f.\n",mousex,mousey);
-    printf("Mouse Drag Position: %d, %d.\n",x,y);
-    glutPostRedisplay();
-    */
 };
 
 // Function to be called when a display update is requested all of the drawing will happen in this function and any functions it calls.
@@ -125,9 +86,14 @@ static void display(void)
     // Clear the buffer before drawing
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-    // Draw Terrain
-    draw_terrain(GL_FILL);
-    //glRotatef(1.0f, 0, 1.0f,0);
+    // Define default light
+    GLfloat light_position[] = {0, 0.5, 0.5, 0.0};
+    GLfloat light_diffuse[] = {.9, .8, .5, 1.0};
+    GLfloat light_ambient[] = {.1, .1, .1, 1.0};
+
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
 
     // Draw all objects
     for(int i=0; i < objects.size(); i++){
@@ -135,29 +101,20 @@ static void display(void)
 		glPushMatrix() ; // save
         objects[i].objDraw();
 		glPopMatrix();
-        /*
-        objects[i].translatef(10.0, 0.0, 0.0);
-		glPushMatrix() ; // save
-        objects[i].objDraw();
-		glPopMatrix();
-        objects[i].translatef(-20.0, 0.0, 0.0);
-		glPushMatrix() ; // save
-        objects[i].objDraw();
-		glPopMatrix();
-        objects[i].translatef(10.0, 0.0, 0.0);
-        objects[i].translatef(0.0, 0.0, i*10.0);
-        */
     }
 
 	//glPushMatrix();
 	//glLoadIdentity();
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable( GL_BLEND );
+    glDisable( GL_LIGHTING ); // Disable Lighting so text is correct color
 
+    // Draw Terrain
+    draw_terrain(GL_FILL);
     draw_grid(10);
 
     glDisable( GL_DEPTH_TEST ) ; // Disable Depth so that text renders on top
-	//glDisable( GL_LIGHTING ); // Disable Lighting so text is correct color
+
 
     // Draw all text
     glColor3f(0.2,0.75,0.2);
@@ -167,12 +124,12 @@ static void display(void)
     m.draw_mouse();
 
 	glEnable( GL_DEPTH_TEST ) ; // Renable Depth
-	//glEnable( GL_LIGHTING ); // Renable Lighting
+	glEnable( GL_LIGHTING ); // Renable Lighting
 	//glPopMatrix();
 
-    glFlush();
-    glutSwapBuffers();                                          // when you call glut draw functions they draw not to the screen but to a buffer to display
-                                                                // the the stuff you just drew you need to swap the buffer with the active screen.
+    glFlush();                  // Makes all the functions execute before it updates the display.
+    glutSwapBuffers();          // when you call glut draw functions they draw not to the screen but to a buffer to display
+                                // the the stuff you just drew you need to swap the buffer with the active screen.
 }
 
 static void idle(void){
@@ -196,7 +153,7 @@ int main(int argc, char *argv[])
     glutCreateWindow("Amethyst");                               // Creates the Main Window with Title
 
     // Startup flow
-    splash_text(GLUT_BITMAP_TIMES_ROMAN_24,"Loading models");
+    splash_text(GLUT_BITMAP_TIMES_ROMAN_24,"Loading Models");
 
     // Init of logic
     myInit();

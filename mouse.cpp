@@ -37,12 +37,11 @@ void mouse_handler::rotate_mode(int button, int state, int x, int y){
 
 void mouse_handler::draw_mouse(){
     if(panning){
-        glTranslatef(current_x-lastx,current_y-lasty,current_z-lastz);
+        glTranslatef((current_x-last_x)/150.0,(current_y-last_y)/150.0,0);  // move by dx,dy and 0
     };
     if(rotating){
-        glRotatef(current_x-lastx,1.0,0.0,0.0);
-        glRotatef(current_y-lasty,0.0,1.0,0.0);
-        glRotatef(current_z-lastz,0.0,0.0,1.0);
+        glRotatef((current_x-last_x)/150.0,0.0,1.0,0.0); // rotate x plane by dx
+        glRotatef((current_y-last_y)/150.0,1.0,0.0,0.0); // rotate y plane by dy
     }
     if(draging){
         glColor4f(0.3,0.3,0.9,0.175);
@@ -65,10 +64,12 @@ void mouse_handler::draw_mouse(){
 };
 
 void mouse_handler::glut_motion( int x, int y ){
-    lastx = current_x;
-    lasty = current_y;
-    current_x = float(x - winWidth/2) / winWidth;
-    current_y = float(-y + winHeight/2) / winHeight;
+    // Set last x before updating current position
+    last_x = current_x;
+    last_y = current_y;
+    // Update current position
+    current_x = x;
+    current_y = y;
 
     /*
     if (mousey > winHeight){
@@ -85,11 +86,8 @@ void mouse_handler::glut_motion( int x, int y ){
     };
     */
 
-    //drag_reference_x = x;
-    //drag_reference_y = y;
-
     //Print the mouse drag position
-    cout << "Internal cord: " << current_x << ", " << current_y << ".\n";
+    cout << "last cord: " << last_x << ", " << last_y << ".\n";
     cout << "Mouse Drag Position: " << x << ", " << y << ".\n";
     glutPostRedisplay();
 };
@@ -99,12 +97,15 @@ void mouse_handler::glut_mouse( int button, int state, int x, int y ){
     case GLUT_LEFT_BUTTON:
         if(state == GLUT_DOWN){
             cout << "you pressed the left button" << endl;
-            drag_reference_x = float(x - winWidth/2) / winWidth ;
-            drag_reference_y = float(-y + winHeight/2) / winHeight;
-            current_x = float(x - winWidth/2) / winWidth;
-            current_y = float(-y + winHeight/2) / winHeight;
-            lastx = current_x;
-            lasty = current_y;
+            // Update current cord
+            current_x = x;
+            current_y = y;
+            // Reset last x and y
+            last_x = x;
+            last_y = y;
+            // Set reference point
+            drag_reference_x = x;
+            drag_reference_y = y;
             draging = true;
         }
         if(state == GLUT_UP){
@@ -130,6 +131,24 @@ void mouse_handler::glut_mouse( int button, int state, int x, int y ){
         if(state == GLUT_UP){
             rotating = false;
             cout << "you released the middle button" << endl;
+        }
+        break;
+    case 3: // Scroll Up
+        if(state == GLUT_DOWN){
+            cout << "you scrolled up button" << endl;
+            glTranslatef(0.0,0.0,1.0);
+        }
+        if(state == GLUT_UP){
+            cout << "you pressed the middle button" << endl;
+        }
+        break;
+    case 4: // Scroll Down
+        if(state == GLUT_DOWN){
+            glTranslatef(0.0,0.0,-1.0);
+            cout << "you scrolled down button" << endl;
+        }
+        if(state == GLUT_UP){
+            cout << "you pressed the middle button" << endl;
         }
         break;
     }

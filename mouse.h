@@ -29,20 +29,26 @@ typedef void (*func)(void);
 
 
 class mouse_handler{
+    // Current mouse position in pixel cords
     float current_x;
     float current_y;
-    float current_z;
+
+    // Previous mouse position in pixel cords
+    float last_x;
+    float last_y;
+
+    // Position for the start of the drag box
     float drag_reference_x;
     float drag_reference_y;
 
-    float lastx;
-    float lasty;
-    float lastz;
+    // z position if needed for 3d cords
+    float current_z;
 
     func left_button_func;
     func right_button_func;
     func middle_button_func;
 
+    // Bools for weather an action is active;
     bool panning;
     bool draging;
     bool rotating;

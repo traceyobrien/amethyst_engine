@@ -94,7 +94,7 @@ public:
         objfile = filename;
         objpath = "C:\\Program Files \(x86\)\\amethyst_engine\\Resources\\";	// Windows path
 		//objpath = "/Users/Albert/objectFiles/";									// Tempory Mac path will be fixed evenutly
-        polymode = GL_LINE;
+        polymode = GL_FILL;
         animation = false;
 
         readObjFile();
