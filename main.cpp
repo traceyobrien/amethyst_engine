@@ -30,12 +30,6 @@ keyboard_handler k = keyboard_handler();
 mouse_handler m = mouse_handler();
 vector<model> objects;
 FpsTimer fpsTimer = FpsTimer(8);
-float mousex;
-float mousey;
-float mousez;
-float referencex;
-float referencey;
-bool drawRect;
 
 int winHeight;
 int winWidth;
@@ -123,8 +117,8 @@ static void display(void)
     // Draw Mouse
     m.draw_mouse();
 
-	glEnable( GL_DEPTH_TEST ) ; // Renable Depth
-	glEnable( GL_LIGHTING ); // Renable Lighting
+	glEnable( GL_DEPTH_TEST ) ; // Re-enable Depth
+	glEnable( GL_LIGHTING ); // Re-enable Lighting
 	//glPopMatrix();
 
     glFlush();                  // Makes all the functions execute before it updates the display.
@@ -141,7 +135,6 @@ int main(int argc, char *argv[])
 {
     winHeight = 640;
     winWidth = 480;
-    mousez = 13.9;
 
     // Initialize window system
     glutInit(&argc, argv);                                      // Initializes glut library which provides all draw calls

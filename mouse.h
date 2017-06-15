@@ -50,7 +50,7 @@ class mouse_handler{
 
     // Bools for weather an action is active;
     bool panning;
-    bool draging;
+    bool dragging;
     bool rotating;
 
 public:
@@ -66,7 +66,7 @@ public:
 
     mouse_handler(){
         panning = false;
-        draging = false;
+        dragging = false;
         rotating = false;
     };
 };
