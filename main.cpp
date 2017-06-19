@@ -45,8 +45,8 @@ void amethyst_Init(){
 	fovy = 45.0;
 	aspect_ratio = 1.333;
 	glutid = 1;
-	active = nullptr;
-	
+	//active = NULL;
+
     // 3D world projection
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
@@ -114,7 +114,7 @@ static void display(void)
 	fpsTimer.timeFrame();
     // Clear the buffer before drawing
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-	
+
     // Define default light
     GLfloat light_position[] = {0, 0.5, 0.5, 0.0};
     GLfloat light_diffuse[] = {.9, .8, .5, 1.0};
@@ -157,7 +157,7 @@ static void display(void)
 
     // Draw Mouse
     m.draw_mouse();
-	
+
 	glEnable( GL_DEPTH_TEST ) ; // Re-enable Depth
 	glEnable( GL_LIGHTING ); // Re-enable Lighting
 	//glPopMatrix();
@@ -169,7 +169,7 @@ static void display(void)
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
 	glPopMatrix();
-	
+
     glFlush();                  // Makes all the functions execute before it updates the display.
     glutSwapBuffers();          // when you call glut draw functions they draw not to the screen but to a buffer to display
                                 // the the stuff you just drew you need to swap the buffer with the active screen.
@@ -209,13 +209,13 @@ int main(int argc, char *argv[])
     glutMouseFunc( mouse );                         // Called when mouse button input is detected
     glutMotionFunc( motion );                       // Called when the mouse moves and has button(s) pressed
     glutIdleFunc( idle );                           // Called when the program has no input.
-	
+
 	// Not used except for debugging, if you want to use one go ahead and implement it.
 	glutEntryFunc( entry );							// Called when the mouse leaves or enters the screen
 	glutVisibilityFunc( visable );					// Called when the screen becomes not visable or visable.
 	glutPassiveMotionFunc( passivemotion );			// Called when the mouse moves but doesnt have any buttons pressed
 	glutKeyboardUpFunc( keyup );					// Called when a key is released
-	
+
 	// Loading Models
 	model buckyball = model("buckyball.obj",1);
 	model cow = model("cow.obj",2);
@@ -231,9 +231,10 @@ int main(int argc, char *argv[])
 	objects.push_back(&b1);
 	objects.push_back(&c1);
 	objects.push_back(&c2);
-	
+
 	// Set default active object.
 	active = &b1;
+
 	// Count the amount of polygons being rendered.
     int polycount = 0;
     for (int i=0; i < objects.size(); i++){
