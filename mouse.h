@@ -54,12 +54,6 @@ class mouse_handler{
     bool rotating;
 
 public:
-    // preset mouse modes
-    void select_mode(int button, int state, int x, int y);
-    void drag_mode(int button, int state, int x, int y);
-    void pan_mode(int button, int state, int x, int y);
-    void rotate_mode(int button, int state, int x, int y);
-
     void draw_mouse();
     void glut_mouse( int button, int state, int x, int y );     // Callback function for glut
     void glut_motion( int x, int y );                           // Callback function for glut

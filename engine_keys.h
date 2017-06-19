@@ -3,7 +3,7 @@
 //  amethyst_engine
 //
 //  Created by Albert Bode on 6/11/17.
-//  Copyright Â© 2017 Albert Bode. All rights reserved.
+//  Copyright © 2017 Albert Bode. All rights reserved.
 //
 
 #ifndef engine_keys_h
@@ -82,7 +82,7 @@ void right_function(){
 void animation_function(){
 	// Start Rotation animation.
 	for (int i=0; i < objects.size(); i++){
-		objects[i].animation = !objects[i].animation;
+		objects[i].rotatef(2.0f,0.0f,0.0f);
 	}
 }
 

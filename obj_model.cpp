@@ -7,9 +7,6 @@
 //
 
 #include "obj_model.h"
-#include <iostream>
-#include <fstream>
-#include <math.h>
 
 using namespace std;
 
@@ -17,15 +14,15 @@ void model::readObjFile(){
     /// Load vertices, vertextures and faces from obj file.
     fstream in;
 
-    string filelocation = objpath + objfile;
+    string filelocation = resourcesPath + filename;
     in.open( filelocation.c_str(), ios::in );
     if(!in.is_open()){
-        cout << " Cannot open file: " + objfile << endl;
+        cout << " Cannot open file: " + filename << endl;
     }
 
     // Temporary variables for parsing file
     string testtype;
-    vertex temp_vertex;
+    wcPt3d temp_vertex;
     verTexture temp_verTexture;
     face temp_face;
 
@@ -85,7 +82,7 @@ void model::objDraw(){
         glRotatef(rotation.z, location.x, location.y, location.z);
 
         // Set color of object
-        glColor3f(1.0,1.0,1.0);
+        glColor3f(1.0f,1.0f,1.0f);
         // Set draw mode of object (wire-frame, solid, points)
         glPolygonMode(GL_FRONT_AND_BACK, polymode);
 
@@ -133,11 +130,20 @@ void model::rotatef(float x, float y, float z){
     if (rotation.x > 360){
         rotation.x -= 360;
     }
+    if (rotation.x < 0){
+        rotation.x += 360;
+    }
     if (rotation.y > 360){
         rotation.y -= 360;
     }
+    if (rotation.y < 0){
+        rotation.y += 360;
+    }
     if (rotation.z > 360){
         rotation.z -= 360;
+    }
+    if (rotation.z < 0){
+        rotation.z += 360;
     }
 };
 
@@ -164,20 +170,12 @@ int model::get_faces(){
     return faces.size();
 };
 
-float* model::get_location(){
+wcPt3d model::get_location(){
     /// Return a array of the object's x,y,z coordinates.
-    float ary [3];
-    ary[0] = location.x;
-    ary[1] = location.y;
-    ary[2] = location.z;
-    return ary;
+    return location;
 };
 
-float* model::get_rotation(){
+wcPt3d model::get_rotation(){
     /// Return a array of the object's x,y,z rotation.
-    float ary [3];
-    ary[0] = rotation.x;
-    ary[1] = rotation.y;
-    ary[2] = rotation.z;
-    return ary;
+    return rotation;
 };

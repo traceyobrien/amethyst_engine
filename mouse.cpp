@@ -8,40 +8,13 @@
 
 #include "mouse.h"
 
-void mouse_handler::select_mode(int button, int state, int x, int y){
-    /*GLuint selectBuffer[ SELECT_BUFfSIZE ];
-    GLuint *ptr, names;
-    int hits, i, j;
-
-    // Viewport information
-    GLuint viewport[4];
-    glGetIntegerv( GL_VIEWPORT, viewport );
-
-    // Selection mode
-    glSelectBuffer( SELECT_BUFFSIZE, selectBuffer);
-    glRenderMode(GL_SELECT);
-
-    // Initialize name stack
-    glInitNames();
-    */
-};
-void mouse_handler::drag_mode(int button, int state, int x, int y){
-
-};
-void mouse_handler::pan_mode(int button, int state, int x, int y){
-
-};
-void mouse_handler::rotate_mode(int button, int state, int x, int y){
-
-};
-
 void mouse_handler::draw_mouse(){
     if(panning){
-        glTranslatef((current_x-last_x)/150.0,(current_y-last_y)/150.0,0);  // move by dx,dy and 0
+        glTranslatef((current_x-last_x)/100.0,-(current_y-last_y)/100.0,0);  // move by dx,dy and 0
     };
     if(rotating){
-        glRotatef((current_x-last_x)/150.0,0.0,1.0,0.0); // rotate x plane by dx
-        glRotatef((current_y-last_y)/150.0,1.0,0.0,0.0); // rotate y plane by dy
+        glRotatef((current_x-last_x)/10.0,0.0,1.0,0.0); // rotate x plane by dx
+        glRotatef((current_y-last_y)/10.0,1.0,0.0,0.0); // rotate y plane by dy
     }
     if(dragging){
         glColor4f(0.3,0.3,0.9,0.175);

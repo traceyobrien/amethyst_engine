@@ -16,29 +16,33 @@
 #include <GL/glut.h>
 #endif
 
-#include<vector>
-#include"string"
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <math.h>
+#include "string"
+
+// Definition of Resources path based on OS.
+#ifdef __APPLE__
+#define resourcesPath "/Users/Albert/objectFiles/"    // Temporary Mac position.
+#else
+#define resourcesPath "C:\\Program Files \(x86\)\\amethyst_engine\\Resources\\"   // Hopefully permanent Windows position.
+#endif
 
 #define solid 24
 
 using namespace std;
 
+struct wcPt3d{
+    /// 3d coordinate representation
+    GLfloat x,y,z;
+};
+
 class model{
-    /// class for holding 3D models to be rendered by glut
-    class vertex{
-        /// Internal vertex class
-    public:
-        float x,y,z;
-        vertex(){
-        x = 0;
-        y = 0;
-        z = 0;
-        }
-    };
     class verTexture{
         /// Internal texture class
     public:
-        float x,y;
+        GLfloat x,y;
         verTexture(){
         x = 0;
         y = 0;
@@ -47,7 +51,7 @@ class model{
     class face{
         /// Internal normal class
     public:
-        float xv, xvt, yv, yvt, zv, zvt;
+        GLfloat xv, xvt, yv, yvt, zv, zvt;
         char discard;
 
         face(){
@@ -61,17 +65,17 @@ class model{
     };
 
 private:
-    vector<vertex> vertices;                // Vertexes of the Object.
+    vector<wcPt3d> vertices;                // Vertexes of the Object.
     vector<verTexture> verTextures;         // Texture cords of the object.
     vector<face> faces;                     // Linking information on what vertexes make up which polygons.
-    vertex location;                        // Overall location of object as a whole.
-    vertex rotation;                        // Rotation attributes of object.
+    wcPt3d location;                        // Location of object.
+    wcPt3d rotation;                        // Rotation of object.
 
 public:
-    bool animation;                         // True for animation on, False for not.
-    int polymode;                           // Tells GLUT how to render the object ex. GL_LINE, GL_FILL being wire-frame or solid respectively.
-    string objfile;                         // Name of obj file to load from.
-    string objpath;                         // Path in which the Object resources are stored. This should be changed to a static variable somewhere else eventually
+    GLint polymode;                         // Tells GLUT how to render the object ex. GL_LINE, GL_FILL being wire-frame or solid respectively.
+    string filename;                        // Name of file to load model from.
+    int id;                                 // Internal id of model
+    //string objpath;                       // The path is now defined based on OS in the beginning of this file.
 
     // Functions
 public:
@@ -86,19 +90,24 @@ public:
     // Accessors
     int get_verts();                                // Return the number of vertices in the object.
     int get_faces();                                // Return the number of polygons in the object.
-    float* get_location();                          // Return a array of the object's x,y,z coordinates.
-    float* get_rotation();                          // Return a array of the object's x,y,z rotation.
+    wcPt3d get_location();                          // Return a array of the object's x,y,z coordinates.
+    wcPt3d get_rotation();                          // Return a array of the object's x,y,z rotation.
 
     // Constructor
-    model(string filename){
-        objfile = filename;
-        objpath = "C:\\Program Files \(x86\)\\amethyst_engine\\Resources\\";	// Windows path
-		//objpath = "/Users/Albert/objectFiles/";									// Tempory Mac path will be fixed evenutly
+    model(string file_name){
+        filename = file_name;
         polymode = GL_FILL;
-        animation = false;
+        id = 0;
 
         readObjFile();
-    }
+    };
+    model(string file_name, int model_id){
+        filename = file_name;
+        polymode = GL_FILL;
+        id = model_id;
+
+        readObjFile();
+    };
 };
 
 #endif // OBJ_MODEL_H_INCLUDED
