@@ -3,7 +3,7 @@
 //  amethyst_engine
 //
 //  Created by Albert Bode on 6/13/17.
-//  Copyright © 2017 Albert Bode. All rights reserved.
+//  Copyright ï¿½ 2017 Albert Bode. All rights reserved.
 //
 
 #ifndef MOUSE_H_INCLUDED
@@ -57,6 +57,7 @@ public:
     void draw_mouse();
     void glut_mouse( int button, int state, int x, int y );     // Callback function for glut
     void glut_motion( int x, int y );                           // Callback function for glut
+	void select_object();
 
     mouse_handler(){
         panning = false;

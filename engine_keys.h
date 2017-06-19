@@ -3,7 +3,7 @@
 //  amethyst_engine
 //
 //  Created by Albert Bode on 6/11/17.
-//  Copyright © 2017 Albert Bode. All rights reserved.
+//  Copyright ï¿½ 2017 Albert Bode. All rights reserved.
 //
 
 #ifndef engine_keys_h
@@ -86,6 +86,10 @@ void animation_function(){
 	}
 }
 
+void rotate_function(){
+	glRotatef(1.0f, 0.0f, 1.0f, 0.0f);
+}
+
 void quit_function(){
 	// Quit program
 	exit(0);
@@ -100,6 +104,7 @@ void init_engine_keys(){
 	k.addKey("moveUp", 'w', up_function);
 	k.addKey("moveRight", 'd', right_function);
 	k.addKey("play", 'p', animation_function);
+	k.addKey("rotate", 'j', rotate_function);
 	k.addKey("quit", 'q', quit_function);
 }
 

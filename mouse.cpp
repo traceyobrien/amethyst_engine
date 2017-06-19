@@ -3,20 +3,25 @@
 //  amethyst_engine
 //
 //  Created by Albert Bode on 6/13/17.
-//  Copyright © 2017 Albert Bode. All rights reserved.
+//  Copyright ï¿½ 2017 Albert Bode. All rights reserved.
 //
 
 #include "mouse.h"
 
 void mouse_handler::draw_mouse(){
     if(panning){
-        glTranslatef((current_x-last_x)/100.0,-(current_y-last_y)/100.0,0);  // move by dx,dy and 0
+		glPopMatrix();
+        glTranslatef((current_x-last_x)/50,-(current_y-last_y)/50,0);  // move by dx,dy and 0
+		glPushMatrix();
     };
     if(rotating){
-        glRotatef((current_x-last_x)/10.0,0.0,1.0,0.0); // rotate x plane by dx
-        glRotatef((current_y-last_y)/10.0,1.0,0.0,0.0); // rotate y plane by dy
+		glPopMatrix();
+        glRotatef((current_x-last_x)/10,0.0,1.0,0.0); // rotate x plane by dx
+        glRotatef((current_y-last_y)/10,1.0,0.0,0.0); // rotate y plane by dy
+		glPushMatrix();
     }
     if(dragging){
+		// Fill of drag box
         glColor4f(0.3,0.3,0.9,0.175);
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
         glBegin(GL_POLYGON);
@@ -25,6 +30,7 @@ void mouse_handler::draw_mouse(){
         glVertex3f(current_x,current_y,current_z);
         glVertex3f(current_x,drag_reference_y,current_z);
         glEnd();
+		// Outline of drag box
         glColor4f(0.3,0.3,0.9,0.9);
         glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         glBegin(GL_POLYGON);
@@ -36,6 +42,10 @@ void mouse_handler::draw_mouse(){
     }
 };
 
+void mouse_handler::select_object(){
+	
+};
+
 void mouse_handler::glut_motion( int x, int y ){
     // Set last x before updating current position
     last_x = current_x;
@@ -43,7 +53,6 @@ void mouse_handler::glut_motion( int x, int y ){
     // Update current position
     current_x = x;
     current_y = y;
-
     /*
     if (mousey > winHeight){
         mousey += -winHeight;
@@ -60,8 +69,8 @@ void mouse_handler::glut_motion( int x, int y ){
     */
 
     //Print the mouse drag position
-    cout << "last cord: " << last_x << ", " << last_y << ".\n";
-    cout << "Mouse Drag Position: " << x << ", " << y << ".\n";
+    //cout << "last cord: " << last_x << ", " << last_y << ".\n";
+    cout << "Mouse Drag Position: " << x << ", " << y << ".\n";			// Debugging
     glutPostRedisplay();
 };
 
@@ -80,10 +89,16 @@ void mouse_handler::glut_mouse( int button, int state, int x, int y ){
             // Set reference point
             drag_reference_x = x;
             drag_reference_y = y;
-            dragging = true;
+			dragging = true;
         }
         if(state == GLUT_UP){
-            cout << "you released the left button" << endl;
+			if(current_x == drag_reference_x && current_y == drag_reference_y){
+				cout << "You clicked the left button" << endl;
+				select_object();
+			}
+			else{
+				cout << "You dragged the left button" << endl;
+			}
             dragging = false;
         }
         break;
@@ -127,3 +142,4 @@ void mouse_handler::glut_mouse( int button, int state, int x, int y ){
         break;
     }
 };
+

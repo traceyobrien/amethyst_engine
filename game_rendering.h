@@ -3,7 +3,7 @@
 //  amethyst_engine
 //
 //  Created by Albert Bode on 6/13/17.
-//  Copyright © 2017 Albert Bode. All rights reserved.
+//  Copyright ï¿½ 2017 Albert Bode. All rights reserved.
 //
 #ifndef GAME_RENDERING_H_INCLUDED
 #define GAME_RENDERING_H_INCLUDED

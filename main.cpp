@@ -33,15 +33,20 @@ FpsTimer fpsTimer = FpsTimer(8);
 
 int winHeight;
 int winWidth;
+double fovy;
+double aspect_ratio;
+
 
 void myInit(){
     // Background color
     glClearColor( 0.0, 0.0, 0.0, 0.0 );
-
+	fovy = 45.0;
+	aspect_ratio = 1.333;
+	
     // 3D world projection
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
-    gluPerspective(45.0, 1.333, 0.01, 1000.0);
+    gluPerspective(fovy, aspect_ratio, 0.01, 1000.0);
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     glTranslatef(0,0,-15);
@@ -79,7 +84,7 @@ static void display(void)
 	fpsTimer.timeFrame();
     // Clear the buffer before drawing
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
+	
     // Define default light
     GLfloat light_position[] = {0, 0.5, 0.5, 0.0};
     GLfloat light_diffuse[] = {.9, .8, .5, 1.0};
@@ -109,18 +114,33 @@ static void display(void)
 
     glDisable( GL_DEPTH_TEST ) ; // Disable Depth so that text renders on top
 
+	// Set drawing mode to 2d projection
+	glPushMatrix();
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity();
+	glOrtho(0, 640, 480, 0, -1, 1);
+	glMatrixMode( GL_MODELVIEW );
+	glLoadIdentity();
 
     // Draw all text
     glColor3f(0.2,0.75,0.2);
-	drawText(-8.1f, 5.9f, GLUT_BITMAP_HELVETICA_10, fpsTimer.getFps());
+	drawText(1.0f, 10.0f, GLUT_BITMAP_HELVETICA_10, fpsTimer.getFps());
 
     // Draw Mouse
     m.draw_mouse();
-
+	
 	glEnable( GL_DEPTH_TEST ) ; // Re-enable Depth
 	glEnable( GL_LIGHTING ); // Re-enable Lighting
 	//glPopMatrix();
 
+	// Reset drawing mode to 3d projection
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity();
+	gluPerspective(fovy, aspect_ratio, 0.01, 1000.0);
+	glMatrixMode( GL_MODELVIEW );
+	glLoadIdentity();
+	glPopMatrix();
+	
     glFlush();                  // Makes all the functions execute before it updates the display.
     glutSwapBuffers();          // when you call glut draw functions they draw not to the screen but to a buffer to display
                                 // the the stuff you just drew you need to swap the buffer with the active screen.
