@@ -15,75 +15,83 @@
 
 using namespace std;
 
-extern vector<model> objects;
+extern model_instance *active;
 extern keyboard_handler k;
 
 void reset_function(){
 	// Reset all location and rotation information
-	for (int i=0; i < objects.size(); i++){
-		objects[i].set_location(0.0,0.0,0.0);
-		objects[i].reset_rotation();
-	}
+	active->set_location(0.0f, 0.0f, 0.0f);
+	active->reset_rotation();
+//	for (int i=0; i < objects.size(); i++){
+//		objects[i]->set_location(0.0f,0.0f,0.0f);
+//		objects[i]->reset_rotation();
+//	}
 }
 
 void forward_function(){
 	// Move all objects 1.0 in z-axis
-	for (int i=0; i < objects.size(); i++){
-		objects[i].translatef(0.0,0.0,1.0);
-		//cout << "i got to this point" << endl;
-		//float *location = objects[i].get_location();
-		//cout << location[0] << location[1] << location[2] << endl;
-	}
+	active->translatef(0.0f, 0.0f, 1.0f);
+//	for (int i=0; i < objects.size(); i++){
+//		objects[i]->translatef(0.0,0.0,1.0);
+//		//float *location = objects[i].get_location();
+//		//cout << location[0] << location[1] << location[2] << endl;
+//	}
 }
 
 void backward_function(){
 	// Move all objects -1.0 in z-axis
-	for (int i=0; i < objects.size(); i++){
-		objects[i].translatef(0.0,0.0,-1.0);
-		//float *location = objects[i].get_location();
-		//cout << location[0] << location[1] << location[2] << endl;
-	}
+	active->translatef(0.0f, 0.0f, -1.0f);
+//	for (int i=0; i < objects.size(); i++){
+//		objects[i]->translatef(0.0,0.0,-1.0);
+//		//float *location = objects[i].get_location();
+//		//cout << location[0] << location[1] << location[2] << endl;
+//	}
 }
 
 void up_function(){
 	// Move all objects 1.0 in y-axis
-	for (int i=0; i < objects.size(); i++){
-		objects[i].translatef(0.0,1.0,0.0);
-		//float *location = objects[i].get_location();
-		//cout << location[0] << location[1] << location[2] << endl;
-	}
+	active->translatef(0.0f, 1.0f, 0.0);
+//	for (int i=0; i < objects.size(); i++){
+//		objects[i]->translatef(0.0,1.0,0.0);
+//		//float *location = objects[i].get_location();
+//		//cout << location[0] << location[1] << location[2] << endl;
+//	}
 }
 void down_function(){
 	// Move all objects -1.0 in y-axis
-	for (int i=0; i < objects.size(); i++){
-		objects[i].translatef(0.0,-1.0,0.0);
-		//float *location = objects[i].get_location();
-		//cout << location[0] << location[1] << location[2] << endl;
-	}
+	active->translatef(0.0f, -1.0f, 0.0f);
+//	for (int i=0; i < objects.size(); i++){
+//		objects[i]->translatef(0.0,-1.0,0.0);
+//		//float *location = objects[i].get_location();
+//		//cout << location[0] << location[1] << location[2] << endl;
+//	}
 }
 void left_function(){
 	// Move all objects -1.0 in x-axis
-	for (int i=0; i < objects.size(); i++){
-		objects[i].translatef(-1.0,0.0,0.0);
-		//float *location = objects[i].get_location();
-		//cout << location[0] << location[1] << location[2] << endl;
-	}
+	active->translatef(-1.0f, 0.0f, 0.0f);
+//	for (int i=0; i < objects.size(); i++){
+//		objects[i]->translatef(-1.0,0.0,0.0);
+//		//float *location = objects[i].get_location();
+//		//cout << location[0] << location[1] << location[2] << endl;
+//	}
 }
 
 void right_function(){
 	// Move all objects 1.0 in x-axis
-	for (int i=0; i < objects.size(); i++){
-		objects[i].translatef(1.0,0.0,0.0);
-		//float *location = objects[i].get_location();
-		//cout << location[0] << location[1] << location[2] << endl;
-	}
+	active->translatef(1.0f, 0.0f, 0.0f);
+//	for (int i=0; i < objects.size(); i++){
+//		objects[i]->translatef(1.0,0.0,0.0);
+//		//float *location = objects[i].get_location();
+//		//cout << location[0] << location[1] << location[2] << endl;
+//	}
 }
 
 void animation_function(){
 	// Start Rotation animation.
-	for (int i=0; i < objects.size(); i++){
-		objects[i].rotatef(2.0f,0.0f,0.0f);
-	}
+	active->rotatef(2.0f, 0.0f, 0.0f);
+//	for (int i=0; i < objects.size(); i++){
+//		objects[i]->rotatef(2.0f,0.0f,0.0f);
+//	}
 }
 
 void rotate_function(){

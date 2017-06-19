@@ -42,10 +42,6 @@ void mouse_handler::draw_mouse(){
     }
 };
 
-void mouse_handler::select_object(){
-	
-};
-
 void mouse_handler::glut_motion( int x, int y ){
     // Set last x before updating current position
     last_x = current_x;
@@ -70,8 +66,8 @@ void mouse_handler::glut_motion( int x, int y ){
 
     //Print the mouse drag position
     //cout << "last cord: " << last_x << ", " << last_y << ".\n";
-    cout << "Mouse Drag Position: " << x << ", " << y << ".\n";			// Debugging
-    glutPostRedisplay();
+    //cout << "Mouse Drag Position: " << x << ", " << y << ".\n";			// Debugging
+    //glutPostRedisplay();
 };
 
 void mouse_handler::glut_mouse( int button, int state, int x, int y ){
@@ -94,7 +90,6 @@ void mouse_handler::glut_mouse( int button, int state, int x, int y ){
         if(state == GLUT_UP){
 			if(current_x == drag_reference_x && current_y == drag_reference_y){
 				cout << "You clicked the left button" << endl;
-				select_object();
 			}
 			else{
 				cout << "You dragged the left button" << endl;

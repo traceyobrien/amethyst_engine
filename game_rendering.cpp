@@ -3,7 +3,7 @@
 //  amethyst_engine
 //
 //  Created by Albert Bode on 6/13/17.
-//  Copyright © 2017 Albert Bode. All rights reserved.
+//  Copyright ï¿½ 2017 Albert Bode. All rights reserved.
 //
 #include "game_rendering.h"
 
@@ -17,7 +17,6 @@ void splash_text(void *font, char *string){
     for (b=string; *b != '\0'; b++){
         offset += glutBitmapWidth(GLUT_BITMAP_TIMES_ROMAN_24, *b);
     }
-    std::cout << offset << std::endl;
 	glRasterPos2f(0.0f-offset/(float(winWidth)*2.0f),0.0f);
 
 	for(c=string; *c != '\0'; c++){
@@ -85,4 +84,8 @@ void draw_grid(int spacing){
         }
     }
     */
+};
+
+int getNextId(){
+	return glutid++;
 };

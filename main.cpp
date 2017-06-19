@@ -28,20 +28,24 @@ using namespace std;
 // Global Variables
 keyboard_handler k = keyboard_handler();
 mouse_handler m = mouse_handler();
-vector<model> objects;
+std::map<string,model*> models;
+vector<model_instance*> objects;
 FpsTimer fpsTimer = FpsTimer(8);
 
 int winHeight;
 int winWidth;
 double fovy;
 double aspect_ratio;
+int glutid;
+model_instance *active;
 
-
-void myInit(){
+void amethyst_Init(){
     // Background color
     glClearColor( 0.0, 0.0, 0.0, 0.0 );
 	fovy = 45.0;
 	aspect_ratio = 1.333;
+	glutid = 1;
+	active = nullptr;
 	
     // 3D world projection
     glMatrixMode( GL_PROJECTION );
@@ -62,6 +66,10 @@ static void key(unsigned char key, int x, int y){
     return_func();
 };
 
+static void keyup(unsigned char key, int x, int y){
+	cout << key << " was released" << endl;
+};
+
 static void special_key(int key, int x, int y){
     cout << key << endl;
 };
@@ -76,6 +84,28 @@ static void motion(int x, int y){
     // This could be changed to just call glut_motion directly.
     // The reason it isn't currently is you have to get a function pointer and im too lazy to fix it.
     m.glut_motion(x,y);
+};
+
+static void passivemotion(int x, int y){
+	//cout << "Mouse Drag Position: " << x << ", " << y << ".\n";			// Debugging
+}
+
+static void visable(int state){
+	if (state == GLUT_NOT_VISIBLE){
+		cout << "The screen is not visable" << endl;
+	};
+	if (state == GLUT_VISIBLE){
+		cout << "The screen is now visable" << endl;
+	};
+};
+
+static void entry(int state){
+	if (state == GLUT_LEFT){
+		cout << "The mouse cursor left the screen" << endl;
+	}
+	if (state == GLUT_ENTERED){
+		cout << "The mouse cursor entered the screen" << endl;
+	}
 };
 
 // Function to be called when a display update is requested all of the drawing will happen in this function and any functions it calls.
@@ -96,9 +126,8 @@ static void display(void)
 
     // Draw all objects
     for(int i=0; i < objects.size(); i++){
-        objects[i].translatef(0.0, 0.0, i*-10.0);
 		glPushMatrix() ; // save
-        objects[i].objDraw();
+        objects[i]->objDraw();
 		glPopMatrix();
     }
 
@@ -118,7 +147,7 @@ static void display(void)
 	glPushMatrix();
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
-	glOrtho(0, 640, 480, 0, -1, 1);
+	glOrtho(0, winHeight, winWidth, 0, -1, 1);
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
 
@@ -144,6 +173,7 @@ static void display(void)
     glFlush();                  // Makes all the functions execute before it updates the display.
     glutSwapBuffers();          // when you call glut draw functions they draw not to the screen but to a buffer to display
                                 // the the stuff you just drew you need to swap the buffer with the active screen.
+	glutid = 1;
 }
 
 static void idle(void){
@@ -169,23 +199,45 @@ int main(int argc, char *argv[])
     splash_text(GLUT_BITMAP_TIMES_ROMAN_24,"Loading Models");
 
     // Init of logic
-    myInit();
+    amethyst_Init();
 	init_engine_keys();
 
     // Set function calls
-    glutDisplayFunc( display );                                   // Set the main draw function
-    glutKeyboardFunc( key );                                      // Set function to call when keyboard input is detected
-    glutSpecialFunc( special_key );
-    glutMouseFunc( mouse );                                       // Set function to call when mouse input is detected
-    glutMotionFunc( motion );                                     // Set function to call for mouse motion.
-    glutIdleFunc( idle );                                         // set function to call when idle
+    glutDisplayFunc( display );                     // Main draw function, called by glutPostRedisplay
+    glutKeyboardFunc( key );                        // Called when a key is pressed
+    glutSpecialFunc( special_key );					// Called when a non-traditional key is pressed ex. (F1, shift, cntl)
+    glutMouseFunc( mouse );                         // Called when mouse button input is detected
+    glutMotionFunc( motion );                       // Called when the mouse moves and has button(s) pressed
+    glutIdleFunc( idle );                           // Called when the program has no input.
+	
+	// Not used except for debugging, if you want to use one go ahead and implement it.
+	glutEntryFunc( entry );							// Called when the mouse leaves or enters the screen
+	glutVisibilityFunc( visable );					// Called when the screen becomes not visable or visable.
+	glutPassiveMotionFunc( passivemotion );			// Called when the mouse moves but doesnt have any buttons pressed
+	glutKeyboardUpFunc( keyup );					// Called when a key is released
+	
+	// Loading Models
+	model buckyball = model("buckyball.obj",1);
+	model cow = model("cow.obj",2);
+	models["buckyball"] = &buckyball;
+	models["cow"] = &cow;
 
-    objects.push_back(model("buckyball.obj"));
-    //objects.push_back(model("killeroo.obj"));
-
+	// Creation of instances and setting of cords.
+	model_instance b1 = model_instance("buckyball");
+	model_instance c1 = model_instance("cow");
+	c1.set_location(10, 0, 0);
+	model_instance c2 = model_instance("cow");
+	c2.set_location(-10, 0, 0);
+	objects.push_back(&b1);
+	objects.push_back(&c1);
+	objects.push_back(&c2);
+	
+	// Set default active object.
+	active = &b1;
+	// Count the amount of polygons being rendered.
     int polycount = 0;
     for (int i=0; i < objects.size(); i++){
-        polycount += objects[i].get_faces();
+        polycount += objects[i]->object_model->get_faces();
     }
 
     cout << "Total number of polys being Rendered: "<< polycount*3 << endl;

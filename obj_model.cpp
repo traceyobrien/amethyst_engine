@@ -3,7 +3,7 @@
 //  amethyst_engine
 //
 //  Created by Albert Bode on 5/21/17.
-//  Copyright © 2017 Albert Bode. All rights reserved.
+//  Copyright ï¿½ 2017 Albert Bode. All rights reserved.
 //
 
 #include "obj_model.h"
@@ -60,19 +60,14 @@ void model::readObjFile(){
         }
     }
 
-    // set center of object
-    location.x = 0;
-    location.y = 0;
-    location.z = 0;
-
     // Close the file
     in.close();
 }
 
-void model::objDraw(){
+void model::objDraw(wcPt3d location, wcPt3d rotation){
     /// Function to add object to the overall scene.
     // Set unique name so that it can be selected.
-    glLoadName(solid);
+    glLoadName(getNextId());
 
     // Beginning of object
     glPushMatrix();
@@ -115,14 +110,27 @@ void model::objDraw(){
     glPopMatrix();
 }
 
-void model::translatef(float x, float y, float z){
+void model_instance::objDraw(){
+	object_model->objDraw(location, rotation);
+}
+
+int model::get_verts(){
+	/// Return the number of vertices in the object.
+	return vertices.size();
+};
+int model::get_faces(){
+	/// Return the number of polygons in the object.
+	return faces.size();
+};
+
+void model_instance::translatef(float x, float y, float z){
     /// Move object from current position by x, y, z.
     location.x += x;
     location.y += y;
     location.z += z;
 };
 
-void model::rotatef(float x, float y, float z){
+void model_instance::rotatef(float x, float y, float z){
     /// Rotate object from current rotation by x, y, z.
     rotation.x += x;
     rotation.y += y;
@@ -147,35 +155,26 @@ void model::rotatef(float x, float y, float z){
     }
 };
 
-void model::set_location(float x, float y, float z){
+void model_instance::set_location(float x, float y, float z){
     /// Move object to the given x, y, z coordinates.
     location.x = x;
     location.y = y;
     location.z = z;
 };
 
-void model::reset_rotation(){
+void model_instance::reset_rotation(){
     /// Reset rotation to default.
     rotation.x = 0;
     rotation.y = 0;
     rotation.z = 0;
 };
 
-int model::get_verts(){
-    /// Return the number of vertices in the object.
-    return vertices.size();
-};
-int model::get_faces(){
-    /// Return the number of polygons in the object.
-    return faces.size();
-};
-
-wcPt3d model::get_location(){
+wcPt3d model_instance::get_location(){
     /// Return a array of the object's x,y,z coordinates.
     return location;
 };
 
-wcPt3d model::get_rotation(){
+wcPt3d model_instance::get_rotation(){
     /// Return a array of the object's x,y,z rotation.
     return rotation;
 };

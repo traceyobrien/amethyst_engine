@@ -18,6 +18,8 @@
 
 #include <iostream>
 
+#include "obj_model.h"
+
 #define MOUSE_SELECT_MODE 1
 #define MOUSE_PAN_MODE 2
 #define MOUSE_ROTATE_MODE 3
@@ -26,7 +28,6 @@
 using namespace std;
 
 typedef void (*func)(void);
-
 
 class mouse_handler{
     // Current mouse position in pixel cords
@@ -57,7 +58,6 @@ public:
     void draw_mouse();
     void glut_mouse( int button, int state, int x, int y );     // Callback function for glut
     void glut_motion( int x, int y );                           // Callback function for glut
-	void select_object();
 
     mouse_handler(){
         panning = false;
