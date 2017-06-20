@@ -84,7 +84,7 @@ public:
     // Accessors
     int get_verts();                        // Return the number of vertices in the object.
     int get_faces();                        // Return the number of polygons in the object.
-    int get_next_id();                        // Return the next available instance_id of this object
+    int get_next_id();                      // Return the next available instance_id of this object
     int get_model_id();                     // Return the id of this model
     string get_model_name();                // Return the name of this model
 
@@ -139,7 +139,15 @@ public:
 		stringstream sstmp;
 		sstmp << model_name << object_model->get_next_id();
 		this->object_name = sstmp.str();
-	};
+
+		location.x = 0;
+		location.y = 0;
+        location.z = 0;
+
+        rotation.x = 0;
+        rotation.y = 0;
+        rotation.z = 0;
+    };
 //	model_instance(int model_id){
 //      this->model_id = model_id;
 //      this->object_model = model_loc[model_id];

@@ -211,8 +211,8 @@ int main(int argc, char *argv[])
 	glutPassiveMotionFunc( passivemotion );			// Called when the mouse moves but doesnt have any buttons pressed
 	glutKeyboardUpFunc( keyup );					// Called when a key is released
 
-    model buckyball = model("buckyball.obj",1,"buckyball");
-	model cow = model("cow.obj",2);
+    model buckyball = model("buckyball.obj", 1, "buckyball");
+	model cow = model("cow.obj", 2, "cow");
 	models["buckyball"] = &buckyball;
 	models["cow"] = &cow;
 
