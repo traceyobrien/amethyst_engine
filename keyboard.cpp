@@ -13,7 +13,7 @@ void nullcharacter(){/*null function for return if character is not assigned*/};
 
 func keyboard_handler::keyInput(unsigned char key, int x, int y){
 	//cout << key << " was pressed" << endl;					// Debugging
-	string keyname = keybindings[key];
+	string keyname = keybindings[tolower(key)];
 	if (keyname.empty()){
 		return nullcharacter;
 	}
