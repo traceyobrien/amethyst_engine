@@ -17,11 +17,16 @@
 
 #include <iostream>
 #include <string>
+#include <map>
+
+#include "obj_model.h"
+
+using namespace std;
+
 void splash_text(void *font, char *string);
 void draw_terrain(GLint polymode);
 void draw_grid(int spacing);
 void drawText(float x, float y, void *font, char *string);
-int getNextId();
 
 extern int glutid;
 extern int winWidth;

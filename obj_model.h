@@ -24,8 +24,6 @@
 #include <math.h>
 #include <string>
 
-#include "game_rendering.h"
-
 // Definition of Resources path based on OS.
 #ifdef __APPLE__
 #define resourcesPath "/Users/Albert/objectFiles/"    // Temporary Mac position.
@@ -86,7 +84,7 @@ public:
     // Accessors
     int get_verts();                        // Return the number of vertices in the object.
     int get_faces();                        // Return the number of polygons in the object.
-    int getNextId();                        // Return the next available instance_id of this object
+    int get_next_id();                        // Return the next available instance_id of this object
     int get_model_id();                     // Return the id of this model
     string get_model_name();                // Return the name of this model
 
@@ -139,7 +137,7 @@ public:
 		this->object_model = models[model_name];
 		this->model_id = object_model->get_model_id();
 		stringstream sstmp;
-		sstmp << model_name << object_model->getNextId();
+		sstmp << model_name << object_model->get_next_id();
 		this->object_name = sstmp.str();
 	};
 //	model_instance(int model_id){

@@ -85,7 +85,3 @@ void draw_grid(int spacing){
     }
     */
 };
-
-int getNextId(){
-	return glutid++;
-};

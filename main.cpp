@@ -36,7 +36,6 @@ int winHeight;
 int winWidth;
 double fovy;
 double aspect_ratio;
-int glutid;
 model_instance *active;
 
 void amethyst_Init(){
@@ -44,7 +43,6 @@ void amethyst_Init(){
     glClearColor( 0.0, 0.0, 0.0, 0.0 );
 	fovy = 45.0;
 	aspect_ratio = 1.333;
-	glutid = 1;
 	//active = NULL;
 
     // 3D world projection
@@ -125,9 +123,9 @@ static void display(void)
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
 
     // Draw all objects
-    for(int i=0; i < objects.size(); i++){
+    for(std::vector<model_instance*>::iterator item = objects.begin(); item != objects.end(); item++){
 		glPushMatrix() ; // save
-        objects[i]->objDraw();
+        (*item)->objDraw();
 		glPopMatrix();
     }
 
@@ -171,7 +169,6 @@ static void display(void)
     glFlush();                  // Makes all the functions execute before it updates the display.
     glutSwapBuffers();          // when you call glut draw functions they draw not to the screen but to a buffer to display
                                 // the the stuff you just drew you need to swap the buffer with the active screen.
-	glutid = 1;
 }
 
 static void idle(void){
@@ -214,32 +211,42 @@ int main(int argc, char *argv[])
 	glutPassiveMotionFunc( passivemotion );			// Called when the mouse moves but doesnt have any buttons pressed
 	glutKeyboardUpFunc( keyup );					// Called when a key is released
 
-	// Loading Models
-	model buckyball = model("buckyball.obj",1,"buckyball");
+    model buckyball = model("buckyball.obj",1,"buckyball");
 	model cow = model("cow.obj",2);
 	models["buckyball"] = &buckyball;
 	models["cow"] = &cow;
 
 	// Creation of instances and setting of cords.
 	model_instance b1 = model_instance("buckyball");
+	b1.set_location(0.0f, 0.0f, 0.0f);
 	model_instance c1 = model_instance("cow");
 	c1.set_location(10.0f, 0.0f, 0.0f);
 	model_instance c2 = model_instance("cow");
 	c2.set_location(-10.0f, 0.0f, 0.0f);
-	model_instance c3 = model_instance("cow");
-	c3.set_location(0.0f, 0.0f, -10.0f);
-	objects.push_back(&b1);
+    model_instance c3 = model_instance("cow");
+	c3.set_location(0.0f, 10.0f, 0.0f);
+    model_instance c4 = model_instance("cow");
+	c4.set_location(0.0f, 0.0f, -10.0f);
+	model_instance c5 = model_instance("cow");
+	c5.set_location(10.0f, 0.0f, -10.0f);
+	model_instance c6 = model_instance("cow");
+	c6.set_location(-10.0f, 0.0f, -10.0f);
+
+    objects.push_back(&b1);
 	objects.push_back(&c1);
 	objects.push_back(&c2);
 	objects.push_back(&c3);
+	//objects.push_back(&c4);
+	//objects.push_back(&c5);
+    //objects.push_back(&c6);
 
 	// Set default active object.
 	active = &b1;
 
 	// Count the amount of polygons being rendered.
     int polycount = 0;
-    for (int i=0; i < objects.size(); i++){
-        polycount += objects[i]->object_model->get_faces();
+    for (std::vector<model_instance*>::iterator item = objects.begin(); item != objects.end(); item++){
+        polycount += (*item)->object_model->get_faces();
     }
 
     cout << "Total number of polys being Rendered: " << polycount << endl;

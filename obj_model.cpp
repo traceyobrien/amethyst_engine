@@ -67,7 +67,7 @@ void model::readObjFile(){
 void model::objDraw(wcPt3d location, wcPt3d rotation){
     /// Function to add object to the overall scene.
     // Set unique name so that it can be selected.
-    glLoadName(getNextId());
+    glLoadName(object_id);
 
     // Beginning of object
     glPushMatrix();
@@ -83,7 +83,7 @@ void model::objDraw(wcPt3d location, wcPt3d rotation){
 
         // Add polygons
         glBegin(GL_TRIANGLES);
-        for (int i=0; i< faces.size();i++){
+        for (unsigned int i=0; i< faces.size();i++){
             // Computation of normal for the triangle
             float qx = vertices[faces[i].yv].x - vertices[faces[i].xv].x;
             float qy = vertices[faces[i].yv].y - vertices[faces[i].xv].y;
@@ -114,7 +114,7 @@ void model_instance::objDraw(){
 	object_model->objDraw(location, rotation);
 }
 
-int model::getNextId(){
+int model::get_next_id(){
     return object_id++;
 };
 
