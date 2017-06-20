@@ -131,8 +131,6 @@ static void display(void)
 		glPopMatrix();
     }
 
-	//glPushMatrix();
-	//glLoadIdentity();
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable( GL_BLEND );
     glDisable( GL_LIGHTING ); // Disable Lighting so text is correct color
@@ -217,7 +215,7 @@ int main(int argc, char *argv[])
 	glutKeyboardUpFunc( keyup );					// Called when a key is released
 
 	// Loading Models
-	model buckyball = model("buckyball.obj",1);
+	model buckyball = model("buckyball.obj",1,"buckyball");
 	model cow = model("cow.obj",2);
 	models["buckyball"] = &buckyball;
 	models["cow"] = &cow;
@@ -225,12 +223,15 @@ int main(int argc, char *argv[])
 	// Creation of instances and setting of cords.
 	model_instance b1 = model_instance("buckyball");
 	model_instance c1 = model_instance("cow");
-	c1.set_location(10, 0, 0);
+	c1.set_location(10.0f, 0.0f, 0.0f);
 	model_instance c2 = model_instance("cow");
-	c2.set_location(-10, 0, 0);
+	c2.set_location(-10.0f, 0.0f, 0.0f);
+	model_instance c3 = model_instance("cow");
+	c3.set_location(0.0f, 0.0f, -10.0f);
 	objects.push_back(&b1);
 	objects.push_back(&c1);
 	objects.push_back(&c2);
+	objects.push_back(&c3);
 
 	// Set default active object.
 	active = &b1;
@@ -241,7 +242,7 @@ int main(int argc, char *argv[])
         polycount += objects[i]->object_model->get_faces();
     }
 
-    cout << "Total number of polys being Rendered: "<< polycount*3 << endl;
+    cout << "Total number of polys being Rendered: " << polycount << endl;
 
     glutMainLoop();                                             // Main event loop
 

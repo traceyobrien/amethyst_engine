@@ -114,6 +114,18 @@ void model_instance::objDraw(){
 	object_model->objDraw(location, rotation);
 }
 
+int model::getNextId(){
+    return object_id++;
+};
+
+int model::get_model_id(){
+    return model_id;
+};
+
+string model::get_model_name(){
+    return model_name;
+};
+
 int model::get_verts(){
 	/// Return the number of vertices in the object.
 	return vertices.size();
