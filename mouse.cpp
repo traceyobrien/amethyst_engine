@@ -90,6 +90,7 @@ void mouse_handler::glut_mouse( int button, int state, int x, int y ){
         if(state == GLUT_UP){
 			if(current_x == drag_reference_x && current_y == drag_reference_y){
 				cout << "You clicked the left button" << endl;
+				select_object(x,y);
 			}
 			else{
 				cout << "You dragged the left button" << endl;

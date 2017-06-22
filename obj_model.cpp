@@ -64,10 +64,10 @@ void model::readObjFile(){
     in.close();
 }
 
-void model::objDraw(wcPt3d location, wcPt3d rotation){
+void model::objDraw(wcPt3d location, wcPt3d rotation, unsigned int model_instance_id){
     /// Function to add object to the overall scene.
     // Set unique name so that it can be selected.
-    glLoadName(object_id);
+    glLoadName(model_instance_id);
 
     // Beginning of object
     glPushMatrix();
@@ -111,7 +111,7 @@ void model::objDraw(wcPt3d location, wcPt3d rotation){
 }
 
 void model_instance::objDraw(){
-	object_model->objDraw(location, rotation);
+	object_model->objDraw(location, rotation, model_instance_id);
 }
 
 int model::get_next_id(){

@@ -66,6 +66,7 @@ public:
     };
 };
 
+extern void select_object(int x, int y);
 extern int winHeight;
 extern int winWidth;
 #endif // MOUSE_H_INCLUDED

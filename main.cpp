@@ -22,7 +22,8 @@
 #include "engine_keys.h"
 #include "game_rendering.h"
 
-#define SELECT_BUFFSIZE 10
+#define PICK_BUFFER_SIZE 256
+#define PICK_TOL 5
 using namespace std;
 
 // Global Variables
@@ -32,6 +33,8 @@ std::map<string,model*> models;
 vector<model_instance*> objects;
 FpsTimer fpsTimer = FpsTimer(8);
 
+unsigned int PickBuffer[PICK_BUFFER_SIZE];	// Picking buffer
+int RenderMode;	// GL_RENDER or GL_SELECT
 int winHeight;
 int winWidth;
 double fovy;
@@ -41,6 +44,7 @@ model_instance *active;
 void amethyst_Init(){
     // Background color
     glClearColor( 0.0, 0.0, 0.0, 0.0 );
+	
 	fovy = 45.0;
 	aspect_ratio = 1.333;
 	//active = NULL;
@@ -52,10 +56,22 @@ void amethyst_Init(){
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     glTranslatef(0,0,-15);
-    glEnable( GL_DEPTH_TEST );
-    glEnable( GL_LIGHTING );
-    glEnable( GL_LIGHT0 );
+	
+	RenderMode = GL_RENDER;	// Set default mode
+	glSelectBuffer( PICK_BUFFER_SIZE, PickBuffer ); // Set the picking buffer
+	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );	// Sets the blending algorthim in the scene, required
+	glEnable( GL_BLEND );		// Enables alpha values in the scene
+    glEnable( GL_DEPTH_TEST );	// Enables depth in the scence
+    glEnable( GL_LIGHTING );	// Enables lighting
+    glEnable( GL_LIGHT0 );		// Enables the assignment of a light
 }
+
+static void resize(int x, int y){
+	winHeight = x;
+	winWidth = y;
+	glViewport(0, 0, x, y);
+	cout << winHeight << winWidth << endl;
+};
 
 // Function to be called when keyboard input is detected.
 static void key(unsigned char key, int x, int y){
@@ -129,46 +145,100 @@ static void display(void)
 		glPopMatrix();
     }
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable( GL_BLEND );
     glDisable( GL_LIGHTING ); // Disable Lighting so text is correct color
 
     // Draw Terrain
     draw_terrain(GL_FILL);
     draw_grid(10);
+	
+	// Raster text will screw up the picking matrix so only do it if in rendering mode.
+	if ( RenderMode == GL_RENDER ){
+		glDisable( GL_DEPTH_TEST ) ; // Disable Depth so that text renders on top
+	
+		// Set drawing mode to 2d projection
+		glPushMatrix();
+		glMatrixMode( GL_PROJECTION );
+		glLoadIdentity();
+		glOrtho(0, winHeight, winWidth, 0, -1, 1);
+		glMatrixMode( GL_MODELVIEW );
+		glLoadIdentity();
 
-    glDisable( GL_DEPTH_TEST ) ; // Disable Depth so that text renders on top
+		// Draw all text
+		glColor3f(0.2,0.75,0.2);
+		drawText(1.0f, 10.0f, GLUT_BITMAP_HELVETICA_10, fpsTimer.getFps());
 
-	// Set drawing mode to 2d projection
+		// Draw Mouse
+		m.draw_mouse();
+
+		glEnable( GL_DEPTH_TEST ) ; // Re-enable Depth
+		glEnable( GL_LIGHTING ); // Re-enable Lighting
+	
+		// Reset drawing mode to 3d projection
+		glMatrixMode( GL_PROJECTION );
+		glLoadIdentity();
+		gluPerspective(fovy, aspect_ratio, 0.01, 1000.0);
+		glMatrixMode( GL_MODELVIEW );
+		glLoadIdentity();
+		glPopMatrix();
+	}
+	
+    glFlush();						// Makes all the functions execute before it updates the display.
+	if(RenderMode == GL_RENDER){	// when you call glut draw functions they draw not to the screen, but to a buffer to
+		glutSwapBuffers();			// display the the stuff you just drew you need to swap the buffer with the active
+									// screen. When you are in select mode the buffer is not intended to be shown.
+		
+
+	}
+}
+
+void select_object(int x, int y){
+	int hits;
+	
+	// Viewport information
+	GLint viewport[4];
+	glGetIntegerv( GL_VIEWPORT, viewport );
+	
+	// Selection mode
+	glSelectBuffer( PICK_BUFFER_SIZE, PickBuffer );
+	glRenderMode( GL_SELECT );
+	
+	// Initialize name stack
+	glInitNames();
+	glPushName(-1);
+	
+	// Save transformation matrix
+	glMatrixMode( GL_MODELVIEW );
 	glPushMatrix();
+	
+	// Save original projection (viewing volume)
 	glMatrixMode( GL_PROJECTION );
+	glPushMatrix();
+	
+	// New picking viewing volume (area == 5 pixels)
 	glLoadIdentity();
-	glOrtho(0, winHeight, winWidth, 0, -1, 1);
-	glMatrixMode( GL_MODELVIEW );
-	glLoadIdentity();
-
-    // Draw all text
-    glColor3f(0.2,0.75,0.2);
-	drawText(1.0f, 10.0f, GLUT_BITMAP_HELVETICA_10, fpsTimer.getFps());
-
-    // Draw Mouse
-    m.draw_mouse();
-
-	glEnable( GL_DEPTH_TEST ) ; // Re-enable Depth
-	glEnable( GL_LIGHTING ); // Re-enable Lighting
-	//glPopMatrix();
-
-	// Reset drawing mode to 3d projection
+	gluPickMatrix ( GLdouble( x ),GLdouble( viewport[3] - y ),PICK_TOL, PICK_TOL, viewport);
+	gluPerspective( fovy, aspect_ratio, 0.01, 1000 );
+	
+	// Draw scene
+	display();
+	
+	// Restore original projection (viewing volume)
 	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity();
-	gluPerspective(fovy, aspect_ratio, 0.01, 1000.0);
-	glMatrixMode( GL_MODELVIEW );
-	glLoadIdentity();
 	glPopMatrix();
-
-    glFlush();                  // Makes all the functions execute before it updates the display.
-    glutSwapBuffers();          // when you call glut draw functions they draw not to the screen but to a buffer to display
-                                // the the stuff you just drew you need to swap the buffer with the active screen.
+	
+	// Restore original modelview matrix
+	glMatrixMode( GL_MODELVIEW );
+	glPopMatrix();
+	
+	// End select mode
+	hits = glRenderMode( GL_RENDER );
+	if (hits > 0){
+		for (std::vector<model_instance*>::iterator item = objects.begin(); item != objects.end(); item++){
+			if ((*item)->model_instance_id == PickBuffer[3]){
+				active = (*item);
+			}
+		}
+	}
 }
 
 static void idle(void){
@@ -199,7 +269,9 @@ int main(int argc, char *argv[])
 
     // Set function calls
     glutDisplayFunc( display );                     // Main draw function, called by glutPostRedisplay
+	glutReshapeFunc( resize );						// Called when the window is resized.
     glutKeyboardFunc( key );                        // Called when a key is pressed
+	glutKeyboardUpFunc( keyup );					// Called when a key is released
     glutSpecialFunc( special_key );					// Called when a non-traditional key is pressed ex. (F1, shift, cntl)
     glutMouseFunc( mouse );                         // Called when mouse button input is detected
     glutMotionFunc( motion );                       // Called when the mouse moves and has button(s) pressed
@@ -209,7 +281,6 @@ int main(int argc, char *argv[])
 	glutEntryFunc( entry );							// Called when the mouse leaves or enters the screen
 	glutVisibilityFunc( visable );					// Called when the screen becomes not visable or visable.
 	glutPassiveMotionFunc( passivemotion );			// Called when the mouse moves but doesnt have any buttons pressed
-	glutKeyboardUpFunc( keyup );					// Called when a key is released
 
     model buckyball = model("buckyball.obj", 1, "buckyball");
 	model cow = model("cow.obj", 2, "cow");
@@ -236,9 +307,10 @@ int main(int argc, char *argv[])
 	objects.push_back(&c1);
 	objects.push_back(&c2);
 	objects.push_back(&c3);
-	//objects.push_back(&c4);
-	//objects.push_back(&c5);
-    //objects.push_back(&c6);
+	objects.push_back(&c4);
+	objects.push_back(&c5);
+    objects.push_back(&c6);
+
 
 	// Set default active object.
 	active = &b1;
