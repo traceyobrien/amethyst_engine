@@ -79,7 +79,7 @@ public:
     // Functions
 public:
     void readObjFile();                             // Load vertices, vertextures and faces from obj file.
-    void objDraw(wcPt3d location, wcPt3d rotation); // Function to add model to the overall scene.
+    void objDraw(wcPt3d location, wcPt3d rotation, unsigned int model_instance_id); // Function to add model to the overall scene.
 
     // Accessors
     int get_verts();                        // Return the number of vertices in the object.
@@ -120,6 +120,7 @@ public:
 	model *object_model;					// Pointer to actual model.
 	int model_id;							// Id of model to load.
 	string object_name;						// Name of object
+	unsigned int model_instance_id;			// temp name id for glut
 
 	// Functions
 	void objDraw();
@@ -138,7 +139,8 @@ public:
 		this->object_model = models[model_name];
 		this->model_id = object_model->get_model_id();
 		stringstream sstmp;
-		sstmp << model_name << object_model->get_next_id();
+		this->model_instance_id = object_model->get_next_id();
+		sstmp << model_name << model_instance_id;
 		this->object_name = sstmp.str();
 
 		location.x = 0;
