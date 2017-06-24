@@ -95,6 +95,10 @@ void animation_function(){
 //	}
 }
 
+void movement_function(){
+    active->move_to_point(20,1,-10);
+}
+
 void rotate_function(){
 	glRotatef(1.0f, 0.0f, 1.0f, 0.0f);
 }
@@ -128,6 +132,7 @@ void init_engine_keys(){
 	k.addKey("play", 'p', animation_function);
 	k.addKey("rotate", 'j', rotate_function);
 	k.addKey("debug",'h', debuglocations);
+	k.addKey("movement",'m',movement_function);
 	k.addKey("quit", 'q', quit_function);
 }
 

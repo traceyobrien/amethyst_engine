@@ -190,3 +190,60 @@ wcPt3d model_instance::get_rotation(){
     /// Return a array of the object's x,y,z rotation.
     return rotation;
 };
+
+void model_instance::move_to_point(float x, float y, float z){
+    const float max_movement = 0.1f;
+    wcPt3d movement_left;
+
+    movement_left.x = x - location.x;
+    movement_left.y = location.y - y;
+    movement_left.z = location.z - z;
+
+    cout << "movement begins" << endl;
+    while(movement_left.x != 0 || movement_left.y != 0 || movement_left.z != 0){
+        // X movement
+        if (movement_left.x > max_movement){
+            translatef(max_movement,0.0f,0.0f);
+            if(movement_left.x < 0){
+                movement_left.x += max_movement;
+            }
+            else{
+                movement_left.x -= max_movement;
+            }
+        }
+        else{
+            translatef(movement_left.x,0.0f,0.0f);
+            movement_left.x = 0;
+        }
+        // Y movement
+        if (movement_left.y > max_movement){
+            translatef(0.0f,max_movement,0.0f);
+            if(movement_left.y < 0){
+                movement_left.y += max_movement;
+            }
+            else{
+                movement_left.y -= max_movement;
+            }
+        }
+        else{
+            translatef(0.0f,movement_left.y,0.0f);
+            movement_left.y = 0;
+        }
+        // Z movement
+         if (movement_left.z > max_movement){
+            translatef(0.0f,0.0f,max_movement);
+            if(movement_left.z < 0){
+                movement_left.z += max_movement;
+            }
+            else{
+                movement_left.z -= max_movement;
+            }
+        }
+        else{
+            translatef(0.0f,0.0f,movement_left.z);
+            movement_left.z = 0;
+        }
+        cout << "location: " << location.x << ", " << location.y << ", " << location.z << endl;
+    }
+    cout << "movement ends" << endl;
+}

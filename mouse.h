@@ -56,6 +56,7 @@ class mouse_handler{
 
 public:
     void draw_mouse();
+    void idle_mouse();
     void glut_mouse( int button, int state, int x, int y );     // Callback function for glut
     void glut_motion( int x, int y );                           // Callback function for glut
 

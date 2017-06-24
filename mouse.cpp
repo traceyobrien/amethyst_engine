@@ -42,6 +42,11 @@ void mouse_handler::draw_mouse(){
     }
 };
 
+void mouse_handler::idle_mouse(){
+    current_x = last_x;
+    current_y = last_y;
+};
+
 void mouse_handler::glut_motion( int x, int y ){
     // Set last x before updating current position
     last_x = current_x;

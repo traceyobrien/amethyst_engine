@@ -16,6 +16,7 @@
 #include <vector>
 // Internal header includes
 #include "obj_model.h"
+#include "model_movement.h"
 #include "fpsTimer.h"
 #include "keyboard.h"
 #include "mouse.h"
@@ -172,6 +173,7 @@ static void display(void)
 }
 
 static void idle(void){
+    //m.idle_mouse();
     glutPostRedisplay();
 }
 
@@ -207,8 +209,8 @@ int main(int argc, char *argv[])
 
 	// Not used except for debugging, if you want to use one go ahead and implement it.
 	glutEntryFunc( entry );							// Called when the mouse leaves or enters the screen
-	glutVisibilityFunc( visable );					// Called when the screen becomes not visable or visable.
-	glutPassiveMotionFunc( passivemotion );			// Called when the mouse moves but doesnt have any buttons pressed
+	glutVisibilityFunc( visable );					// Called when the screen becomes not visible or visible.
+	glutPassiveMotionFunc( passivemotion );			// Called when the mouse moves but doesn't have any buttons pressed
 	glutKeyboardUpFunc( keyup );					// Called when a key is released
 
     model buckyball = model("buckyball.obj", 1, "buckyball");
@@ -236,9 +238,9 @@ int main(int argc, char *argv[])
 	objects.push_back(&c1);
 	objects.push_back(&c2);
 	objects.push_back(&c3);
-	//objects.push_back(&c4);
-	//objects.push_back(&c5);
-    //objects.push_back(&c6);
+	objects.push_back(&c4);
+	objects.push_back(&c5);
+    objects.push_back(&c6);
 
 	// Set default active object.
 	active = &b1;

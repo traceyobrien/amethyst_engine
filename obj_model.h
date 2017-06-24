@@ -112,7 +112,7 @@ public:
 extern std::map<string,model*> models;
 
 class model_instance{
-private:
+protected:
 	wcPt3d location;                        // Location of object.
 	wcPt3d rotation;                        // Rotation of object.
 
@@ -127,6 +127,7 @@ public:
 	void rotatef(float x, float y, float z);        // Rotate object from current rotation by x, y, z.
 	void set_location(float x, float y, float z);   // Move object to the given x, y, z coordinates.
 	void reset_rotation();                          // Reset rotation to default.
+	void move_to_point(float x, float y, float z);
 
 	// Accessors
 	wcPt3d get_location();                          // Return a array of the object's x,y,z coordinates.
