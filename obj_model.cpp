@@ -111,6 +111,14 @@ void model::objDraw(wcPt3d location, wcPt3d rotation, unsigned int model_instanc
 }
 
 void model_instance::objDraw(){
+    if(!q.empty()){
+        wcPt3d movement_xyz;
+        movement_xyz = q.front();
+        //cout << "location before pop: " << movement_xyz.x << ", " << movement_xyz.y << ", " << movement_xyz.z << endl;
+        q.pop();
+        //cout << "location after pop: " << movement_xyz.x << ", " << movement_xyz.y << ", " << movement_xyz.z << endl;
+        this->translatef(movement_xyz.x,movement_xyz.y,movement_xyz.z);
+    }
 	object_model->objDraw(location, rotation, model_instance_id);
 }
 
@@ -192,58 +200,65 @@ wcPt3d model_instance::get_rotation(){
 };
 
 void model_instance::move_to_point(float x, float y, float z){
-    const float max_movement = 0.1f;
+    const float max_movement = 0.3f;
     wcPt3d movement_left;
+    wcPt3d movement_xyz;
 
     movement_left.x = x - location.x;
-    movement_left.y = location.y - y;
-    movement_left.z = location.z - z;
+    movement_left.y = y - location.y;
+    movement_left.z = z - location.z;
 
     cout << "movement begins" << endl;
     while(movement_left.x != 0 || movement_left.y != 0 || movement_left.z != 0){
         // X movement
-        if (movement_left.x > max_movement){
-            translatef(max_movement,0.0f,0.0f);
-            if(movement_left.x < 0){
-                movement_left.x += max_movement;
-            }
-            else{
-                movement_left.x -= max_movement;
-            }
+        if (movement_left.x > 0 && movement_left.x > max_movement){
+            movement_xyz.x = max_movement;
+            movement_left.x -= max_movement;
         }
-        else{
-            translatef(movement_left.x,0.0f,0.0f);
+        else if (movement_left.x < 0 && movement_left.x < -(max_movement)){
+            movement_xyz.x = -(max_movement);
+            movement_left.x += max_movement;
+        }
+        else {
+            movement_xyz.x = movement_left.x;
             movement_left.x = 0;
         }
         // Y movement
-        if (movement_left.y > max_movement){
-            translatef(0.0f,max_movement,0.0f);
-            if(movement_left.y < 0){
-                movement_left.y += max_movement;
-            }
-            else{
-                movement_left.y -= max_movement;
-            }
+        if (movement_left.y > 0 && movement_left.y > max_movement){
+            movement_xyz.y = max_movement;
+            movement_left.y -= max_movement;
         }
-        else{
-            translatef(0.0f,movement_left.y,0.0f);
+        else if (movement_left.y < 0 && movement_left.y < -(max_movement)){
+            movement_xyz.y = -(max_movement);
+            movement_left.y += max_movement;
+        }
+        else {
+            movement_xyz.y = movement_left.y;
             movement_left.y = 0;
         }
         // Z movement
-         if (movement_left.z > max_movement){
-            translatef(0.0f,0.0f,max_movement);
-            if(movement_left.z < 0){
-                movement_left.z += max_movement;
-            }
-            else{
-                movement_left.z -= max_movement;
-            }
+        if (movement_left.z > 0 && movement_left.z > max_movement){
+            movement_xyz.z = max_movement;
+            movement_left.z -= max_movement;
         }
-        else{
-            translatef(0.0f,0.0f,movement_left.z);
+        else if (movement_left.z < 0 && movement_left.z < -(max_movement)){
+            movement_xyz.z = -(max_movement);
+            movement_left.z += max_movement;
+        }
+        else {
+            movement_xyz.z = movement_left.z;
             movement_left.z = 0;
         }
-        cout << "location: " << location.x << ", " << location.y << ", " << location.z << endl;
+        cout << "location: " << movement_xyz.x << ", " << movement_xyz.y << ", " << movement_xyz.z << endl;
+        q.push(movement_xyz);
     }
     cout << "movement ends" << endl;
+}
+
+void model_instance::empty_queue(){
+    if(!q.empty()){
+        for(int i = 0; i < q.size(); i++){
+            q.pop();
+        }
+    }
 }

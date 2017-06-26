@@ -16,6 +16,7 @@
 #include <GL/glut.h>
 #endif
 
+#include <queue>
 #include <vector>
 #include <map>
 #include <iostream>
@@ -121,6 +122,7 @@ public:
 	int model_id;							// Id of model to load.
 	string object_name;						// Name of object
 	unsigned int model_instance_id;			// temp name id for glut
+	std::queue<wcPt3d> q;
 
 	// Functions
 	void objDraw();
@@ -129,6 +131,7 @@ public:
 	void set_location(float x, float y, float z);   // Move object to the given x, y, z coordinates.
 	void reset_rotation();                          // Reset rotation to default.
 	void move_to_point(float x, float y, float z);
+	void empty_queue();
 
 	// Accessors
 	wcPt3d get_location();                          // Return a array of the object's x,y,z coordinates.

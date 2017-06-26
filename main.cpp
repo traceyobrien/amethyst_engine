@@ -16,7 +16,6 @@
 #include <vector>
 // Internal header includes
 #include "obj_model.h"
-#include "model_movement.h"
 #include "fpsTimer.h"
 #include "keyboard.h"
 #include "mouse.h"
@@ -45,7 +44,7 @@ model_instance *active;
 void amethyst_Init(){
     // Background color
     glClearColor( 0.0, 0.0, 0.0, 0.0 );
-	
+
 	fovy = 45.0;
 	aspect_ratio = 1.333;
 	//active = NULL;
@@ -57,7 +56,7 @@ void amethyst_Init(){
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     glTranslatef(0,0,-15);
-	
+
 	RenderMode = GL_RENDER;	// Set default mode
 	glSelectBuffer( PICK_BUFFER_SIZE, PickBuffer ); // Set the picking buffer
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );	// Sets the blending algorthim in the scene, required
@@ -151,11 +150,11 @@ static void display(void)
     // Draw Terrain
     draw_terrain(GL_FILL);
     draw_grid(10);
-	
+
 	// Raster text will screw up the picking matrix so only do it if in rendering mode.
 	if ( RenderMode == GL_RENDER ){
 		glDisable( GL_DEPTH_TEST ) ; // Disable Depth so that text renders on top
-	
+
 		// Set drawing mode to 2d projection
 		glPushMatrix();
 		glMatrixMode( GL_PROJECTION );
@@ -173,7 +172,7 @@ static void display(void)
 
 		glEnable( GL_DEPTH_TEST ) ; // Re-enable Depth
 		glEnable( GL_LIGHTING ); // Re-enable Lighting
-	
+
 		// Reset drawing mode to 3d projection
 		glMatrixMode( GL_PROJECTION );
 		glLoadIdentity();
@@ -182,55 +181,55 @@ static void display(void)
 		glLoadIdentity();
 		glPopMatrix();
 	}
-	
+
     glFlush();						// Makes all the functions execute before it updates the display.
 	if(RenderMode == GL_RENDER){	// when you call glut draw functions they draw not to the screen, but to a buffer to
 		glutSwapBuffers();			// display the the stuff you just drew you need to swap the buffer with the active
 									// screen. When you are in select mode the buffer is not intended to be shown.
-		
+
 
 	}
 }
 
 void select_object(int x, int y){
 	int hits;
-	
+
 	// Viewport information
 	GLint viewport[4];
 	glGetIntegerv( GL_VIEWPORT, viewport );
-	
+
 	// Selection mode
 	glSelectBuffer( PICK_BUFFER_SIZE, PickBuffer );
 	glRenderMode( GL_SELECT );
-	
+
 	// Initialize name stack
 	glInitNames();
 	glPushName(-1);
-	
+
 	// Save transformation matrix
 	glMatrixMode( GL_MODELVIEW );
 	glPushMatrix();
-	
+
 	// Save original projection (viewing volume)
 	glMatrixMode( GL_PROJECTION );
 	glPushMatrix();
-	
+
 	// New picking viewing volume (area == 5 pixels)
 	glLoadIdentity();
 	gluPickMatrix ( GLdouble( x ),GLdouble( viewport[3] - y ),PICK_TOL, PICK_TOL, viewport);
 	gluPerspective( fovy, aspect_ratio, 0.01, 1000 );
-	
+
 	// Draw scene
 	display();
-	
+
 	// Restore original projection (viewing volume)
 	glMatrixMode( GL_PROJECTION );
 	glPopMatrix();
-	
+
 	// Restore original modelview matrix
 	glMatrixMode( GL_MODELVIEW );
 	glPopMatrix();
-	
+
 	// End select mode
 	hits = glRenderMode( GL_RENDER );
 	if (hits > 0){
@@ -281,14 +280,10 @@ int main(int argc, char *argv[])
 
 	// Not used except for debugging, if you want to use one go ahead and implement it.
 	glutEntryFunc( entry );							// Called when the mouse leaves or enters the screen
-<<<<<<< HEAD
+
 	glutVisibilityFunc( visable );					// Called when the screen becomes not visible or visible.
 	glutPassiveMotionFunc( passivemotion );			// Called when the mouse moves but doesn't have any buttons pressed
 	glutKeyboardUpFunc( keyup );					// Called when a key is released
-=======
-	glutVisibilityFunc( visable );					// Called when the screen becomes not visable or visable.
-	glutPassiveMotionFunc( passivemotion );			// Called when the mouse moves but doesnt have any buttons pressed
->>>>>>> 5d5cb7677ac1a77f326801904ac4c21514b10ac4
 
     model buckyball = model("buckyball.obj", 1, "buckyball");
 	model cow = model("cow.obj", 2, "cow");
@@ -318,10 +313,6 @@ int main(int argc, char *argv[])
 	objects.push_back(&c4);
 	objects.push_back(&c5);
     objects.push_back(&c6);
-<<<<<<< HEAD
-=======
-
->>>>>>> 5d5cb7677ac1a77f326801904ac4c21514b10ac4
 
 	// Set default active object.
 	active = &b1;

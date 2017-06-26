@@ -95,8 +95,14 @@ void animation_function(){
 //	}
 }
 
-void movement_function(){
-    active->move_to_point(20,1,-10);
+void movement1_function(){
+    active->empty_queue();
+    active->move_to_point(-10,1,-10);
+}
+
+void movement2_function(){
+    active->empty_queue();
+    active->move_to_point(20,1,20);
 }
 
 void rotate_function(){
@@ -132,7 +138,8 @@ void init_engine_keys(){
 	k.addKey("play", 'p', animation_function);
 	k.addKey("rotate", 'j', rotate_function);
 	k.addKey("debug",'h', debuglocations);
-	k.addKey("movement",'m',movement_function);
+	k.addKey("movement1",'m',movement1_function);
+	k.addKey("movement2",'n',movement2_function);
 	k.addKey("quit", 'q', quit_function);
 }
 
