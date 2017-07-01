@@ -32,6 +32,8 @@
 #define resourcesPath "C:\\Program Files \(x86\)\\amethyst_engine\\Resources\\"   // Hopefully permanent Windows position.
 #endif
 
+#include "rendering_utils.h"
+
 using namespace std;
 
 struct wcPt3d{
@@ -68,6 +70,7 @@ private:
     vector<wcPt3d> vertices;                // Vertexes of the Object.
     vector<verTexture> verTextures;         // Texture cords of the object.
     vector<face> faces;                     // Linking information on what vertexes make up which polygons.
+    color *model_color;
 
 public:
     GLint polymode;                         // Tells GLUT how to render the object ex. GL_LINE, GL_FILL being wire-frame or solid respectively.
@@ -94,6 +97,7 @@ public:
         this->filename = filename;
         this->model_id = model_id;
         this->model_name = filename.substr(0, filename.find_last_of("."));
+        this->model_color = new color("firebrick",1.0f);
         object_id = 1;
 		polymode = GL_FILL;
 
@@ -103,11 +107,16 @@ public:
         this->filename = filename;
         this->model_name = model_name;
         this->model_id = model_id;
+        this->model_color = new color("grey",1.0f);
         object_id = 1;
 		polymode = GL_FILL;
 
         readObjFile();
     };
+
+    ~model(){
+        delete model_color;
+    }
 };
 
 extern std::map<string,model*> models;

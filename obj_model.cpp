@@ -77,7 +77,17 @@ void model::objDraw(wcPt3d location, wcPt3d rotation, unsigned int model_instanc
         glRotatef(rotation.z, location.x, location.y, location.z);
 
         // Set color of object
-        glColor3f(1.0f,1.0f,1.0f);
+        glColor3f(0.9f,0.1f,0.1f);
+        static GLfloat vCompColor[4];
+        const GLfloat shininess = 30.0f;
+        vCompColor[0] = model_color->red;
+        vCompColor[1] = model_color->green;
+        vCompColor[2] = model_color->blue;
+        vCompColor[3] = model_color->alpha;
+
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, vCompColor);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, vCompColor);
+        glMaterialf(GL_FRONT, GL_SHININESS, shininess);
         // Set draw mode of object (wire-frame, solid, points)
         glPolygonMode(GL_FRONT_AND_BACK, polymode);
 

@@ -41,6 +41,12 @@ double fovy;
 double aspect_ratio;
 model_instance *active;
 
+// Define default light
+GLfloat light_position[] = {0, 0.5, 0.5, 0.0};
+GLfloat light_diffuse[] = {.5, .5, .5, 1.0};
+GLfloat light_ambient[] = {.1, .1, .1, 1.0};
+GLfloat light_specular[] = {1.0, 1.0, 1.0, 1.0};
+
 void amethyst_Init(){
     // Background color
     glClearColor( 0.0, 0.0, 0.0, 0.0 );
@@ -70,7 +76,7 @@ static void resize(int x, int y){
 	winHeight = x;
 	winWidth = y;
 	glViewport(0, 0, x, y);
-	cout << winHeight << winWidth << endl;
+	//cout << winHeight << winWidth << endl;
 };
 
 // Function to be called when keyboard input is detected.
@@ -129,14 +135,10 @@ static void display(void)
     // Clear the buffer before drawing
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-    // Define default light
-    GLfloat light_position[] = {0, 0.5, 0.5, 0.0};
-    GLfloat light_diffuse[] = {.9, .8, .5, 1.0};
-    GLfloat light_ambient[] = {.1, .1, .1, 1.0};
-
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
 
     // Draw all objects
     for(std::vector<model_instance*>::iterator item = objects.begin(); item != objects.end(); item++){
@@ -253,7 +255,7 @@ int main(int argc, char *argv[])
     winWidth = 480;
 
     // Initialize window system
-    glutInit(&argc, argv);                                      // Initializes glut library which provides all draw calls
+    glutInit(&argc, argv);                                      // Initializes glut library which provides the interface for drawing to the screen.
     glutInitWindowSize(winHeight,winWidth);                     // Window Size in pixels
     glutInitWindowPosition(10,10);                              // Window Offset in pixels
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);   // Sets screen format
